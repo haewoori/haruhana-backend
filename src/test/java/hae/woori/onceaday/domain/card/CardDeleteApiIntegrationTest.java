@@ -58,7 +58,6 @@ class CardDeleteApiIntegrationTest {
 
 		MyCardDeleteDto.Request request = new MyCardDeleteDto.Request("user123");
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", card.getId())
-			.param("cardId", card.getId())
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 
@@ -77,7 +76,6 @@ class CardDeleteApiIntegrationTest {
 		userDocumentRepository.save(user);
 		MyCardDeleteDto.Request request = new MyCardDeleteDto.Request("user123");
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", "notExistId")
-			.param("cardId", "notExistId")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 
@@ -103,7 +101,6 @@ class CardDeleteApiIntegrationTest {
 
 		MyCardDeleteDto.Request request = new MyCardDeleteDto.Request("otherUser");
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", card.getId())
-			.param("cardId", card.getId())
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 

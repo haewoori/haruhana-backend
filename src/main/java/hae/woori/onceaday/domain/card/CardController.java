@@ -29,7 +29,7 @@ public class CardController {
 	}
 
 	@DeleteMapping("/delete/{cardId}")
-	public MyCardDeleteDto.Response delete(@RequestParam String cardId, @RequestBody MyCardDeleteDto.Request request) {
+	public MyCardDeleteDto.Response delete(@PathVariable String cardId, @RequestBody MyCardDeleteDto.Request request) {
 		return myCardDeleteService.run(MyCardDeleteDto.requestWrapperFrom(request, cardId));
 	}
 
