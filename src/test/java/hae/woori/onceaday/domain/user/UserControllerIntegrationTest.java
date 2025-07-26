@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,8 +46,18 @@ class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
+        UserDocument expected = UserDocument.builder()
+                .userId("tank3a@gmail.com")
+                .name("김종원")
+                .nickname("탱크3세")
+                .gender(0)
+                .build();
         result.andExpect(status().isOk());
         assertThat(userDocumentRepository.findAll()).hasSize(1);
+        assertThat(expected)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "createdTime")
+                .isEqualTo(userDocumentRepository.findAll().get(0));
     }
 
     @Test
