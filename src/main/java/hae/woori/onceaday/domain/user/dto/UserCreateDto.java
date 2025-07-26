@@ -4,11 +4,14 @@ import jakarta.validation.constraints.NotNull;
 
 public class UserCreateDto {
 
-    public record Request(
-        @NotNull String userId,
-        @NotNull String name,
-        String nickname,
-        Integer gender
-    ) {}
-    public record Response() {}
+	public record Request(
+		@NotNull String userId,
+		@NotNull String name,
+		String nickname,
+		Integer gender
+	) {
+	}
+
+	public record Response() {
+	}
 }

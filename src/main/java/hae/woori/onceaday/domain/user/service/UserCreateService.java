@@ -3,7 +3,7 @@ package hae.woori.onceaday.domain.user.service;
 import hae.woori.onceaday.domain.SimpleService;
 import hae.woori.onceaday.domain.user.dto.UserCreateDto;
 import hae.woori.onceaday.domain.user.mapper.UserMapper;
-import hae.woori.onceaday.persistence.UserDocumentRepository;
+import hae.woori.onceaday.persistence.repository.UserDocumentRepository;
 import hae.woori.onceaday.persistence.document.UserDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
