@@ -1,11 +1,13 @@
 package hae.woori.onceaday.domain.card;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import hae.woori.onceaday.domain.card.dto.MyCardCreateDto;
 import hae.woori.onceaday.persistence.document.CardDocument;
 import hae.woori.onceaday.persistence.document.UserDocument;
 import hae.woori.onceaday.persistence.repository.CardDocumentRepository;
-import hae.woori.onceaday.persistence.UserDocumentRepository;
+import hae.woori.onceaday.persistence.repository.UserDocumentRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,120 +28,120 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class CardCreateApiIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private CardDocumentRepository cardDocumentRepository;
-    @Autowired
-    private UserDocumentRepository userDocumentRepository;
+	@Autowired
+	private MockMvc mockMvc;
+	@Autowired
+	private ObjectMapper objectMapper;
+	@Autowired
+	private CardDocumentRepository cardDocumentRepository;
+	@Autowired
+	private UserDocumentRepository userDocumentRepository;
 
-    @BeforeEach
-    void setUp() {
-        cardDocumentRepository.deleteAll();
-        userDocumentRepository.deleteAll();
-    }
+	@BeforeEach
+	void setUp() {
+		cardDocumentRepository.deleteAll();
+		userDocumentRepository.deleteAll();
+	}
 
-    @Test
-    @DisplayName("userId가 UserDocument에 존재할 때 카드 정상 생성 및 DB 값 검증")
-    void createCard_whenUserExists_success() throws Exception {
-        UserDocument user = UserDocument.builder()
-                .userId("user123")
-                .name("홍길동")
-                .nickname("test123")
-                .gender(1)
-                .build();
-        userDocumentRepository.save(user);
+	@Test
+	@DisplayName("userId가 UserDocument에 존재할 때 카드 정상 생성 및 DB 값 검증")
+	void createCard_whenUserExists_success() throws Exception {
+		UserDocument user = UserDocument.builder()
+			.userId("user123")
+			.name("홍길동")
+			.nickname("test123")
+			.gender(1)
+			.build();
+		userDocumentRepository.save(user);
 
-        MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-                "user123",
-                "카드 내용입니다.",
-                "#FFAA00"
-        );
+		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
+			"user123",
+			"카드 내용입니다.",
+			"#FFAA00"
+		);
 
-        ResultActions result = mockMvc.perform(post("/api/v1/card/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
 
-        result.andExpect(status().isOk());
-        List<CardDocument> cards = cardDocumentRepository.findAll();
-        assertThat(cards).hasSize(1);
+		result.andExpect(status().isOk());
+		List<CardDocument> cards = cardDocumentRepository.findAll();
+		assertThat(cards).hasSize(1);
 
-        CardDocument expected = CardDocument.builder()
-                .bgColor("#FFAA00")
-                .content("카드 내용입니다.")
-                .emotions(null)
-                .userId("user123")
-                .build();
-        assertThat(expected).usingRecursiveComparison()
-                .ignoringFields("id", "createTime")
-                .isEqualTo(cards.getFirst());
-    }
+		CardDocument expected = CardDocument.builder()
+			.bgColor("#FFAA00")
+			.content("카드 내용입니다.")
+			.emojiRecords(null)
+			.userId("user123")
+			.build();
+		assertThat(expected).usingRecursiveComparison()
+			.ignoringFields("id", "createTime")
+			.isEqualTo(cards.getFirst());
+	}
 
-    @Test
-    @DisplayName("userId가 UserDocument에 존재하지 않을 때 400 에러 및 DB 저장 실패")
-    void createCard_whenUserNotExists_fail() throws Exception {
-        MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-                "user123",
-                "카드 내용입니다.",
-                "#FFAA00"
-        );
+	@Test
+	@DisplayName("userId가 UserDocument에 존재하지 않을 때 400 에러 및 DB 저장 실패")
+	void createCard_whenUserNotExists_fail() throws Exception {
+		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
+			"user123",
+			"카드 내용입니다.",
+			"#FFAA00"
+		);
 
-        ResultActions result = mockMvc.perform(post("/api/v1/card/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
 
-        result.andExpect(status().isBadRequest());
-        assertThat(cardDocumentRepository.findAll()).isEmpty();
-    }
+		result.andExpect(status().isBadRequest());
+		assertThat(cardDocumentRepository.findAll()).isEmpty();
+	}
 
-    @Test
-    @DisplayName("bgColor가 정규식에 맞지 않을 때 400 에러 및 DB 저장 실패")
-    void createCard_whenBgColorInvalid_fail() throws Exception {
-        UserDocument user = UserDocument.builder()
-                .userId("user123")
-                .name("홍길동")
-                .gender(0)
-                .build();
-        userDocumentRepository.save(user);
+	@Test
+	@DisplayName("bgColor가 정규식에 맞지 않을 때 400 에러 및 DB 저장 실패")
+	void createCard_whenBgColorInvalid_fail() throws Exception {
+		UserDocument user = UserDocument.builder()
+			.userId("user123")
+			.name("홍길동")
+			.gender(0)
+			.build();
+		userDocumentRepository.save(user);
 
-        MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-                "user123",
-                "카드 내용입니다.",
-                "123456"
-        );
+		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
+			"user123",
+			"카드 내용입니다.",
+			"123456"
+		);
 
-        ResultActions result = mockMvc.perform(post("/api/v1/card/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
 
-        result.andExpect(status().isBadRequest());
-        assertThat(cardDocumentRepository.findAll()).isEmpty();
-    }
+		result.andExpect(status().isBadRequest());
+		assertThat(cardDocumentRepository.findAll()).isEmpty();
+	}
 
-    @Test
-    @DisplayName("content가 60자를 초과할 때 400 에러 및 DB 저장 실패")
-    void createCard_whenContentTooLong_fail() throws Exception {
-        UserDocument user = UserDocument.builder()
-                .userId("user123")
-                .name("홍길동")
-                .gender(0)
-                .build();
-        userDocumentRepository.save(user);
+	@Test
+	@DisplayName("content가 60자를 초과할 때 400 에러 및 DB 저장 실패")
+	void createCard_whenContentTooLong_fail() throws Exception {
+		UserDocument user = UserDocument.builder()
+			.userId("user123")
+			.name("홍길동")
+			.gender(0)
+			.build();
+		userDocumentRepository.save(user);
 
-        MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-                "user123",
-                "a".repeat(61),
-                "#FFAA00"
-        );
+		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
+			"user123",
+			"a".repeat(61),
+			"#FFAA00"
+		);
 
-        ResultActions result = mockMvc.perform(post("/api/v1/card/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
 
-        result.andExpect(status().isBadRequest());
-        assertThat(cardDocumentRepository.findAll()).isEmpty();
-    }
+		result.andExpect(status().isBadRequest());
+		assertThat(cardDocumentRepository.findAll()).isEmpty();
+	}
 }
 
