@@ -1,0 +1,2 @@
+### Check No Authentication
+GET {{BaseUrl}}/api/v1/global/noauth

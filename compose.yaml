@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  app:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: mongoadmin
+      MONGO_INITDB_DATABASE: onceaday
+    volumes:
+      - mongo-data:/usr/src/app
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    networks:
+      - my-network
+volumes:
+  mongo-data:
+
+networks:
+    my-network:
+      external: true
+      name: once-a-day-network
