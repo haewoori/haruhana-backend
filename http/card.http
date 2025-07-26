@@ -15,3 +15,25 @@ Content-Type: application/json
 {
   "userId": "tank3a@gmail.com"
 }
+
+### Get Card List
+GET {{BaseUrl}}/api/v1/card/get?date=2025-07-27
+
+### Add Emoji to Card
+POST {{BaseUrl}}/api/v1/card/emoji/add
+Content-Type: application/json
+
+{
+  "userId": "{{UserId}}",
+  "cardId": "{{CardId}}",
+  "emojiId": "{{EmojiId}}"
+}
+
+### Delete Emoji to Card
+DELETE {{BaseUrl}}/api/v1/card/emoji/delete
+Content-Type: application/json
+
+{
+  "userId": "{{UserId}}",
+  "cardId": "{{CardId}}"
+}
