@@ -1,7 +1,7 @@
 package hae.woori.onceaday.persistence.vo;
 
 public record EmojiRecord(
-    String emotionId,
+    String emojiId,
     String image,
     String userId
 ) { }

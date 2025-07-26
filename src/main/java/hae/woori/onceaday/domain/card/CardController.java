@@ -1,8 +1,10 @@
 package hae.woori.onceaday.domain.card;
 
 import hae.woori.onceaday.domain.card.dto.EmojiAddDto;
+import hae.woori.onceaday.domain.card.dto.EmojiDeleteDto;
 import hae.woori.onceaday.domain.card.dto.MyCardDeleteDto;
 import hae.woori.onceaday.domain.card.service.EmojiAddService;
+import hae.woori.onceaday.domain.card.service.EmojiDeleteService;
 import hae.woori.onceaday.domain.card.service.MyCardCreateService;
 import hae.woori.onceaday.domain.card.dto.MyCardCreateDto;
 import hae.woori.onceaday.domain.card.service.MyCardDeleteService;
@@ -19,6 +21,7 @@ public class CardController {
 	private final MyCardCreateService myCardCreateService;
 	private final MyCardDeleteService myCardDeleteService;
 	private final EmojiAddService emojiAddService;
+	private final EmojiDeleteService emojiDeleteService;
 
 	@PostMapping("/create")
 	public MyCardCreateDto.Response create(@Valid @RequestBody MyCardCreateDto.Request request) {
@@ -33,5 +36,10 @@ public class CardController {
 	@PostMapping("/emoji/add")
 	public EmojiAddDto.Response addEmoji(@Valid @RequestBody EmojiAddDto.Request request) {
 		return emojiAddService.run(request);
+	}
+
+	@DeleteMapping("/emoji/delete")
+	public EmojiDeleteDto.Response deleteEmoji(@Valid @RequestBody EmojiDeleteDto.Request request) {
+		return emojiDeleteService.run(request);
 	}
 }
