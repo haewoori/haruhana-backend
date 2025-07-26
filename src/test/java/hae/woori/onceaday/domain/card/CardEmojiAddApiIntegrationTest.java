@@ -52,6 +52,7 @@ class CardEmojiAddApiIntegrationTest {
         UserDocument user = UserDocument.builder()
                 .userId("user123")
                 .name("홍길동")
+                .imageUrl("http://example.com/image.jpg")
                 .gender(0)
                 .build();
         userDocumentRepository.save(user);
@@ -88,6 +89,7 @@ class CardEmojiAddApiIntegrationTest {
         UserDocument user = UserDocument.builder()
                 .userId("user123")
                 .name("홍길동")
+                .imageUrl("http://example.com/image.jpg")
                 .gender(0)
                 .build();
         userDocumentRepository.save(user);
@@ -129,6 +131,7 @@ class CardEmojiAddApiIntegrationTest {
         UserDocument user = UserDocument.builder()
                 .userId("user123")
                 .name("홍길동")
+                .imageUrl("http://example.com/image.jpg")
                 .gender(0)
                 .build();
         userDocumentRepository.save(user);
@@ -153,6 +156,7 @@ class CardEmojiAddApiIntegrationTest {
         UserDocument user = UserDocument.builder()
                 .userId("user123")
                 .name("홍길동")
+                .imageUrl("http://example.com/image.jpg")
                 .gender(0)
                 .build();
         userDocumentRepository.save(user);

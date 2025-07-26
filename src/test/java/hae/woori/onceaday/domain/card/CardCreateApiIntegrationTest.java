@@ -50,6 +50,7 @@ class CardCreateApiIntegrationTest {
 			.userId("user123")
 			.name("홍길동")
 			.nickname("test123")
+			.imageUrl("http://example.com/image.jpg")
 			.gender(1)
 			.build();
 		userDocumentRepository.save(user);
@@ -71,12 +72,12 @@ class CardCreateApiIntegrationTest {
 		CardDocument expected = CardDocument.builder()
 			.bgColor("#FFAA00")
 			.content("카드 내용입니다.")
-			.emojiRecords(null)
 			.userId("user123")
 			.build();
-		assertThat(expected).usingRecursiveComparison()
-			.ignoringFields("id", "createTime")
-			.isEqualTo(cards.getFirst());
+		assertThat(cards.getFirst()).usingRecursiveComparison()
+			.ignoringFields("id", "createTime", "emojiRecords")
+			.isEqualTo(expected);
+		assertThat(cards.getFirst().getEmojiRecords()).isEmpty();
 	}
 
 	@Test
@@ -102,6 +103,7 @@ class CardCreateApiIntegrationTest {
 		UserDocument user = UserDocument.builder()
 			.userId("user123")
 			.name("홍길동")
+			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
 		userDocumentRepository.save(user);
@@ -126,6 +128,7 @@ class CardCreateApiIntegrationTest {
 		UserDocument user = UserDocument.builder()
 			.userId("user123")
 			.name("홍길동")
+			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
 		userDocumentRepository.save(user);

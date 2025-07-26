@@ -7,6 +7,7 @@ public class UserCreateDto {
 	public record Request(
 		@NotNull String userId,
 		@NotNull String name,
+		String imageUrl,
 		String nickname,
 		Integer gender
 	) {

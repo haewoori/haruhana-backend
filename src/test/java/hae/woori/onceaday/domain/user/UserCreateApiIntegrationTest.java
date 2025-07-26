@@ -41,24 +41,23 @@ class UserCreateApiIntegrationTest {
 	@Test
 	@DisplayName("사용자 정상 생성")
 	void createUser_success() throws Exception {
-		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "탱크3세", 0);
+		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "http://example.com/image.jpg", "탱크3세", 0);
 
-		ResultActions result = mockMvc.perform(post("/api/v1/user/create")
-			.contentType(MediaType.APPLICATION_JSON)
+		ResultActions result = mockMvc.perform(post("/api/v1/user/create").contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 
 		UserDocument expected = UserDocument.builder()
 			.userId("tank3a@gmail.com")
 			.name("김종원")
 			.nickname("탱크3세")
+			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
 		result.andExpect(status().isOk());
 		assertThat(userDocumentRepository.findAll()).hasSize(1);
-		assertThat(expected)
-			.usingRecursiveComparison()
+		assertThat(userDocumentRepository.findAll().getFirst()).usingRecursiveComparison()
 			.ignoringFields("id", "createdTime")
-			.isEqualTo(userDocumentRepository.findAll().getFirst());
+			.isEqualTo(expected);
 	}
 
 	@Test
@@ -68,15 +67,15 @@ class UserCreateApiIntegrationTest {
 		UserDocument user = UserDocument.builder()
 			.userId("tank3a@gmail.com")
 			.name("김종원")
+			.imageUrl("http://example.com/image.jpg")
 			.nickname("탱크3세")
 			.gender(0)
 			.build();
 		userDocumentRepository.save(user);
 
-		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "탱크3세", 0);
+		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "http://example.com/image.jpg", "탱크3세", 0);
 
-		ResultActions result = mockMvc.perform(post("/api/v1/user/create")
-			.contentType(MediaType.APPLICATION_JSON)
+		ResultActions result = mockMvc.perform(post("/api/v1/user/create").contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isInternalServerError());

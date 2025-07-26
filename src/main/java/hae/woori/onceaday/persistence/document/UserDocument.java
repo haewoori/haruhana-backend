@@ -31,6 +31,9 @@ public class UserDocument {
 	@NotNull
 	@Field(value = "gender")
 	private int gender;
+	//TODO: Default Image 설정 필요
+	@Field(value = "image_url")
+	private String imageUrl;
 	@CreatedDate
 	@Field(value = "created_time")
 	private LocalDateTime createdTime;
