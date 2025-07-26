@@ -1,3 +1,17 @@
 ### Create Card
 POST {{BaseUrl}}/api/v1/card/create
 Content-Type: application/json
+
+{
+  "userId": "tank3a@gmail.com",
+  "content": "Hello, this is a new card!",
+  "bgColor": "#FFFFFF"
+}
+
+### Delete Card
+DELETE {{BaseUrl}}/api/v1/card/delete/{{CardId}}
+Content-Type: application/json
+
+{
+  "userId": "tank3a@gmail.com"
+}
