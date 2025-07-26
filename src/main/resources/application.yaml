@@ -1,0 +1,7 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    mongodb:
+      uri: mongodb://appuser:appUser1!@localhost:27017/onceaday
