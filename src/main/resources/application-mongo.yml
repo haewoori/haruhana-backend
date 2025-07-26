@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    mongodb:
+      uri: mongodb://appuser:appUser1@localhost:27017/onceaday?authSource=onceaday
+      auto-index-creation: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prd
+  data:
+    mongodb:
+      uri: mongodb://appuser:appUser1@localhost:27017/onceaday?authSource=onceaday
+      auto-index-creation: true

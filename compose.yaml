@@ -3,12 +3,12 @@ version: '3.9'
 services:
   app:
     image: mongo:latest
+    container_name: mongo-local
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: mongoadmin
-      MONGO_INITDB_DATABASE: onceaday
     volumes:
       - mongo-data:/usr/src/app
       - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
