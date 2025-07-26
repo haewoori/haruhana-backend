@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerIntegrationTest {
+class UserCreateApiIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,7 +56,7 @@ class UserControllerIntegrationTest {
         assertThat(expected)
                 .usingRecursiveComparison()
                 .ignoringFields("id", "createdTime")
-                .isEqualTo(userDocumentRepository.findAll().get(0));
+                .isEqualTo(userDocumentRepository.findAll().getFirst());
     }
 
     @Test

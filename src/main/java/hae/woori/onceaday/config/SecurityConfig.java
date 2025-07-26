@@ -19,6 +19,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/global/noauth").permitAll()
                         .requestMatchers("/api/v1/user/create").permitAll()
+                        //TODO: oauth 추가 후 permitAll 제거
+                        .requestMatchers("/**").permitAll() // 모든 요청을 허용 (개발 중에는 이렇게 설정할 수 있지만, 실제 서비스에서는 적절히 수정해야 함)
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()); // 또는 formLogin().defaultSuccessUrl(...) 등
