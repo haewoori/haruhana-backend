@@ -16,4 +16,13 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(value = {ClientSideException.class})
+    public ResponseEntity<ExceptionResponse> handleException(ClientSideException exception) {
+        ExceptionResponse responseBody = new ExceptionResponse(
+                exception.getMessage(), "CLIENT_SIDE_ERROR"
+        );
+
+        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    }
 }

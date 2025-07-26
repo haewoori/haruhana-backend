@@ -1,0 +1,3 @@
+### Create Card
+POST {{BaseUrl}}/api/v1/card/create
+Content-Type: application/json
