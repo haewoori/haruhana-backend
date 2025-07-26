@@ -16,7 +16,7 @@ public interface CardMapper {
 
     List<CardVo> cardDocumentsToCardVos(List<CardDocument> cardDocuments);
 
-    @Mapping(target = "cardId", source = "id")
-    @Mapping(target = "createdAt", source = "createTime")
+    @Mapping(target = "cardId", source = "cardDocument.id")
+    @Mapping(target = "createdAt", source = "cardDocument.createTime")
     CardVo cardDocumentsToCardVo(CardDocument cardDocument, UserProfileVo userProfile);
 }

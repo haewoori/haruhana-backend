@@ -3,8 +3,8 @@ POST {{BaseUrl}}/api/v1/card/create
 Content-Type: application/json
 
 {
-  "userId": "tank3a@gmail.com",
-  "content": "Hello, this is a new card!",
+  "userId": "tank4a@gmail.com",
+  "content": "Hello, this is a new card111!",
   "bgColor": "#FFFFFF"
 }
 
@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### Get Card List
-GET {{BaseUrl}}/api/v1/card/get?date=2025-07-27
+GET {{BaseUrl}}/api/v1/card/get?date=2025-07-27&userId=tank3a@naver.com
 
 ### Add Emoji to Card
 POST {{BaseUrl}}/api/v1/card/emoji/add
