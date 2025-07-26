@@ -1,0 +1,10 @@
+### Create User
+POST {{BaseUrl}}/api/v1/user/create
+Content-Type: application/json
+
+{
+  "userId": "tank3a@naver.com",
+  "name": "김종원",
+  "nickname": "탱크3세",
+  "gender": 1
+}
