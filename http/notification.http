@@ -1,0 +1,12 @@
+### 알림 추가
+POST {{BaseUrl}}/api/v1/notifications/add
+Content-Type: application/json
+
+{
+  "message": "알림 메시지입니다."
+}
+
+### 알림 전체 조회
+GET {{BaseUrl}}/api/v1/notifications/get
+Accept: application/json
+
