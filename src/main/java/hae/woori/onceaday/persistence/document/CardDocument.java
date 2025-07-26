@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -29,6 +30,7 @@ public class CardDocument {
 	private String content;
 	@Field(value = "create_time")
 	@CreatedDate
+	@Indexed
 	private LocalDateTime createTime;
 	@Field(value = "emotions")
 	@Builder.Default
