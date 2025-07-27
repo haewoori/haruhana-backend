@@ -2,6 +2,7 @@ package hae.woori.onceaday.domain.card;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hae.woori.onceaday.AccessTokenGenerator;
 import hae.woori.onceaday.domain.card.dto.EmojiAddDto;
 import hae.woori.onceaday.persistence.document.CardDocument;
 import hae.woori.onceaday.persistence.document.EmojiDocument;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -27,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import({AccessTokenGenerator.class})
 @SpringBootTest
 @AutoConfigureMockMvc
 class CardEmojiAddApiIntegrationTest {
@@ -40,6 +43,8 @@ class CardEmojiAddApiIntegrationTest {
 	private UserDocumentRepository userDocumentRepository;
 	@Autowired
 	private EmojiDocumentRepository emojiDocumentRepository;
+	@Autowired
+	private AccessTokenGenerator accessTokenGenerator;
 
 	@BeforeEach
 	void setUp() {
@@ -52,19 +57,22 @@ class CardEmojiAddApiIntegrationTest {
 	@DisplayName("카드에 처음 emoji를 추가하는 userId일 때 정상적으로 추가 및 DB 값 검증")
 	void addEmoji_whenFirstTime_success() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
-		CardDocument card = CardDocument.builder().userId("user123").content("카드 내용").bgColor("#FFAA00").build();
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
+		CardDocument card = CardDocument.builder().userId(user.getId()).content("카드 내용").bgColor("#FFAA00").build();
 		card = cardDocumentRepository.save(card);
 		EmojiDocument emoji = EmojiDocument.builder().emojiUrl("url1").build();
 		emoji = emojiDocumentRepository.save(emoji);
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request(card.getId(), emoji.getId());
-		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add").contentType(MediaType.APPLICATION_JSON)
+		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isOk());
@@ -72,7 +80,7 @@ class CardEmojiAddApiIntegrationTest {
 		assertThat(updated.getEmojiRecords()).hasSize(1);
 		EmojiRecord record = updated.getEmojiRecords().getFirst();
 
-		EmojiRecord expected = new EmojiRecord(emoji.getId(), emoji.getEmojiUrl(), user.getEmail());
+		EmojiRecord expected = new EmojiRecord(emoji.getId(), emoji.getEmojiUrl(), user.getId());
 		assertThat(record).usingRecursiveComparison().isEqualTo(expected);
 	}
 
@@ -80,26 +88,30 @@ class CardEmojiAddApiIntegrationTest {
 	@DisplayName("카드에 이미 추가한적이 있는 userId일 때 기존 emoji가 교체됨 및 DB 값 검증")
 	void addEmoji_whenAlreadyExists_replacesEmoji() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
+
 		EmojiDocument oldEmoji = EmojiDocument.builder().emojiUrl("oldUrl").build();
 		oldEmoji = emojiDocumentRepository.save(oldEmoji);
 		CardDocument card = CardDocument.builder()
-			.userId("user123")
+			.userId(user.getId())
 			.content("카드 내용")
 			.bgColor("#FFAA00")
-			.emojiRecords(List.of(new EmojiRecord(oldEmoji.getId(), oldEmoji.getEmojiUrl(), user.getEmail())))
+			.emojiRecords(List.of(new EmojiRecord(oldEmoji.getId(), oldEmoji.getEmojiUrl(), user.getId())))
 			.build();
 		card = cardDocumentRepository.save(card);
 		EmojiDocument newEmoji = EmojiDocument.builder().emojiUrl("newUrl").build();
 		newEmoji = emojiDocumentRepository.save(newEmoji);
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request(card.getId(), newEmoji.getId());
-		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add").contentType(MediaType.APPLICATION_JSON)
+		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isOk());
@@ -107,7 +119,7 @@ class CardEmojiAddApiIntegrationTest {
 		assertThat(updated.getEmojiRecords()).hasSize(1);
 		EmojiRecord record = updated.getEmojiRecords().getFirst();
 
-		EmojiRecord expected = new EmojiRecord(newEmoji.getId(), newEmoji.getEmojiUrl(), user.getEmail());
+		EmojiRecord expected = new EmojiRecord(newEmoji.getId(), newEmoji.getEmojiUrl(), user.getId());
 		assertThat(record).usingRecursiveComparison().isEqualTo(expected);
 	}
 
@@ -115,17 +127,20 @@ class CardEmojiAddApiIntegrationTest {
 	@DisplayName("카드가 존재하지 않을 때 400 에러 및 DB 값 검증")
 	void addEmoji_whenCardNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 		EmojiDocument emoji = EmojiDocument.builder().id("emoji1").emojiUrl("url1").build();
 		emojiDocumentRepository.save(emoji);
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request("notExistCardId", "emoji1");
-		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add").contentType(MediaType.APPLICATION_JSON)
+		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isBadRequest());
@@ -136,17 +151,21 @@ class CardEmojiAddApiIntegrationTest {
 	@DisplayName("이모티콘이 존재하지 않을 때 400 에러 및 DB 값 검증")
 	void addEmoji_whenEmojiNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
-		CardDocument card = CardDocument.builder().userId("user123").content("카드 내용").bgColor("#FFAA00").build();
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
+
+		CardDocument card = CardDocument.builder().userId(user.getId()).content("카드 내용").bgColor("#FFAA00").build();
 		card = cardDocumentRepository.save(card);
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request(card.getId(), "notExistEmojiId");
-		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add").contentType(MediaType.APPLICATION_JSON)
+		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isBadRequest());
@@ -161,9 +180,13 @@ class CardEmojiAddApiIntegrationTest {
 		card = cardDocumentRepository.save(card);
 		EmojiDocument emoji = EmojiDocument.builder().id("emoji1").emojiUrl("url1").build();
 		emojiDocumentRepository.save(emoji);
+		String accessToken = accessTokenGenerator.generateAccessToken("invalid_user_id");
+
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request(card.getId(), "emoji1");
-		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add").contentType(MediaType.APPLICATION_JSON)
+		ResultActions result = mockMvc.perform(post("/api/v1/card/emoji/add")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isBadRequest());
