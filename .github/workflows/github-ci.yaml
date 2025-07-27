@@ -43,9 +43,14 @@ jobs:
 
       # 5. Gradle 빌드 (.env 반영하여 환경변수로 실행)
       - name: Build with Gradle
-        run: |
-          export $(cat .env | xargs)  # 환경변수 주입
-          ./gradlew clean bootJar -x test
+        run: ./gradlew clean bootJar -x test
+        env:
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          MONGO_PRD_URL: ${{ secrets.MONGO_PRD_URL }}
+          SERVER_OAUTH_REDIRECT_URI_PRD: ${{ secrets.SERVER_OAUTH_REDIRECT_URI_PRD }}
+          CLIENT_OAUTH_REDIRECT_URI_PRD: ${{ secrets.CLIENT_OAUTH_REDIRECT_URI_PRD }}
 
       # 6. 빌드된 jar에 타임스탬프 붙이기
       - name: Copy Jar with Timestamp
