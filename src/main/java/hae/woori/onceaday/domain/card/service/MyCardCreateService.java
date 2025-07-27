@@ -13,18 +13,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MyCardCreateService implements SimpleService<MyCardCreateDto.Request, MyCardCreateDto.Response> {
+public class MyCardCreateService implements SimpleService<MyCardCreateDto.RequestWrapper, MyCardCreateDto.Response> {
 
 	private final CardMapper cardMapper;
 	private final CardDocumentRepository cardDocumentRepository;
 	private final UserGateway userGateway;
 
 	@Override
-	public MyCardCreateDto.Response run(MyCardCreateDto.Request request) {
+	public MyCardCreateDto.Response run(MyCardCreateDto.RequestWrapper request) {
 		if (!userGateway.checkUserExistsById(request.userId())) {
 			throw new ClientSideException("User does not exist with userId: " + request.userId());
 		}
-		CardDocument cardDocument = cardMapper.createRequestToCardDocument(request);
+		CardDocument cardDocument = cardMapper.createRequestWrapperToCardDocument(request);
 		cardDocumentRepository.save(cardDocument);
 		return new MyCardCreateDto.Response();
 	}

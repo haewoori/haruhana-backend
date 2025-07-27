@@ -3,6 +3,7 @@ package hae.woori.onceaday.domain.user.service;
 import hae.woori.onceaday.domain.SimpleService;
 import hae.woori.onceaday.domain.user.dto.UserCreateDto;
 import hae.woori.onceaday.domain.user.mapper.UserMapper;
+import hae.woori.onceaday.exception.ClientSideException;
 import hae.woori.onceaday.persistence.repository.UserDocumentRepository;
 import hae.woori.onceaday.persistence.document.UserDocument;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class UserCreateService implements SimpleService<UserCreateDto.Request, U
             userDocumentRepository.save(document);
         } catch (DuplicateKeyException e) {
             log.error("User already exists: {}", e.getMessage());
-            throw new RuntimeException("User already exists");
+            throw new ClientSideException("User already exists");
         }
         return new UserCreateDto.Response();
     }

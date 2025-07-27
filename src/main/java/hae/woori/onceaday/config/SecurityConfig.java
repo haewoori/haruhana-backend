@@ -21,7 +21,9 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/v1/global/noauth").permitAll()
-				.requestMatchers("/api/v1/user/oauth/kakao").permitAll()
+				.requestMatchers("/api/v1/oauth/kakao").permitAll()
+				.requestMatchers("/api/v1/user/create").permitAll()
+				.requestMatchers("/api/v1/notifications/add").denyAll()
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated()
 			)
