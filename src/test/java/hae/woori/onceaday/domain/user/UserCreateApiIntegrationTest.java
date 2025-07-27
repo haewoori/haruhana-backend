@@ -47,7 +47,7 @@ class UserCreateApiIntegrationTest {
 			.content(objectMapper.writeValueAsString(request)));
 
 		UserDocument expected = UserDocument.builder()
-			.userId("tank3a@gmail.com")
+			.email("tank3a@gmail.com")
 			.name("김종원")
 			.nickname("탱크3세")
 			.imageUrl("http://example.com/image.jpg")
@@ -65,7 +65,7 @@ class UserCreateApiIntegrationTest {
 	void createUser_duplicate() throws Exception {
 		// 먼저 사용자 생성
 		UserDocument user = UserDocument.builder()
-			.userId("tank3a@gmail.com")
+			.email("tank3a@gmail.com")
 			.name("김종원")
 			.imageUrl("http://example.com/image.jpg")
 			.nickname("탱크3세")

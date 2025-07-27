@@ -52,12 +52,12 @@ class CardGetApiIntegrationTest {
     @DisplayName("userId가 생성했던 card와 그 외의 카드가 모두 있고, 조회")
     void getCard_whenUserAndOtherCardsExist_success() throws Exception {
         UserDocument user1 = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .gender(0)
                 .build();
         UserDocument user2 = UserDocument.builder()
-                .userId("user456")
+                .email("user456")
                 .name("임꺽정")
                 .gender(1)
                 .build();
@@ -100,12 +100,12 @@ class CardGetApiIntegrationTest {
     @DisplayName("userId가 생성한 카드는 없고 그 외의 카드가 있고, 조회")
     void getCard_whenOnlyOtherCardsExist_success() throws Exception {
         UserDocument user1 = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .gender(0)
                 .build();
         UserDocument user2 = UserDocument.builder()
-                .userId("user456")
+                .email("user456")
                 .name("임꺽정")
                 .gender(1)
                 .build();
@@ -136,7 +136,7 @@ class CardGetApiIntegrationTest {
     @DisplayName("특정 날짜에 카드가 하나도 없을 때 조회 결과가 모두 빈 배열")
     void getCard_whenNoCardsExist_success() throws Exception {
         UserDocument user1 = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .gender(0)
                 .build();
@@ -158,7 +158,7 @@ class CardGetApiIntegrationTest {
     @DisplayName("날짜 형식이 잘못 왔을 때 400 에러")
     void getCard_whenDateFormatInvalid_fail() throws Exception {
         UserDocument user1 = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .gender(0)
                 .build();

@@ -47,7 +47,7 @@ class CardCreateApiIntegrationTest {
 	@DisplayName("userId가 UserDocument에 존재할 때 카드 정상 생성 및 DB 값 검증")
 	void createCard_whenUserExists_success() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.nickname("test123")
 			.imageUrl("http://example.com/image.jpg")
@@ -101,7 +101,7 @@ class CardCreateApiIntegrationTest {
 	@DisplayName("bgColor가 정규식에 맞지 않을 때 400 에러 및 DB 저장 실패")
 	void createCard_whenBgColorInvalid_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -126,7 +126,7 @@ class CardCreateApiIntegrationTest {
 	@DisplayName("content가 60자를 초과할 때 400 에러 및 DB 저장 실패")
 	void createCard_whenContentTooLong_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
