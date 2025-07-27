@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-@Profile("local")
+// @Profile("local")
 @Configuration
 public class DotEnvConfig {
 
