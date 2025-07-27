@@ -1,5 +1,11 @@
 name: Build and Deploy
 
+on:
+  push:
+    branches:
+      - main
+      - develop
+      
 env:
   S3_BUCKET_NAME: "haruhana-backend-jar"
 
