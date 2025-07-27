@@ -98,8 +98,8 @@ jobs:
             pkill -f 'java -jar' || echo "No process running"
             
             # S3에서 최신 jar 다운로드
-            aws s3 cp s3://$S3_BUCKET_NAME/      - name: Download artifact name
+            aws s3 cp s3://$S3_BUCKET_NAME/onceaday-0.0.1-SNAPSHOT.jar app.jar
             
             # 새 jar 실행
-            nohup java -Dspring.profiles.active=prd -jar ~/$JAR_FILE > app.log 2>&1 &
+            nohup java -Dspring.profiles.active=prd -jar ~/app.jar > app.log 2>&1 &
           EOF
