@@ -6,7 +6,7 @@ spring:
 
 oauth:
   client:
-    redirect-uri: "http://localhost:3000/oauth/kakao/redirect?token="
+    redirect-uri: "http://localhost:3000/oauth/kakao/redirect"
   server:
     redirect-uri: "http://localhost:8080/api/v1/oauth/kakao"
   kakao:
