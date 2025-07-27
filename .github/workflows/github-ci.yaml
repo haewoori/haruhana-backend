@@ -72,15 +72,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
           aws-region: ap-northeast-2
 
-      - name: Download artifact name
-        run: echo "JAR_NAME=${{ needs.build.outputs.jar_name }}" >> $GITHUB_ENV
+      - name: Download built JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: built-jar
         
       # 8. S3에 업로드
       - name: Upload to S3
         run: |
           JAR_FILE=$(ls *.jar | head -n 1)
           echo "Uploading $JAR_FILE"
-          aws s3 cp "$JAR_NAME" s3://$S3_BUCKET_NAME/
+          aws s3 cp "$JAR_FILE" s3://$S3_BUCKET_NAME/
 
       # 9. EC2 SSH PEM키 Decode
       - name: Decode SSH key
