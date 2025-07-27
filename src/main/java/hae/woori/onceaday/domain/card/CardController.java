@@ -12,6 +12,10 @@ import hae.woori.onceaday.domain.card.service.EmojiDeleteService;
 import hae.woori.onceaday.domain.card.service.MyCardCreateService;
 import hae.woori.onceaday.domain.card.dto.MyCardCreateDto;
 import hae.woori.onceaday.domain.card.service.MyCardDeleteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,16 @@ public class CardController {
 	private final EmojiDeleteService emojiDeleteService;
 
 	@GetMapping("/get")
+	@Operation(description = "특정 날짜에 해당하는 내 카드와 다른 사람 카드 리스트를 조회합니다.",
+	responses = {
+		@ApiResponse(
+			responseCode = "200",
+			description = "카드 리스트 조회 성공",
+			content = @Content(
+				schema = @Schema(implementation = MyCardSearchDto.Response.class)
+			)
+		)
+	})
 	public MyCardSearchDto.Response searchCard(
 		@RequestParam @Valid @Pattern(regexp = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))") String date,
 			//TODO: OAuth 추가 후 access token이용
@@ -39,7 +53,7 @@ public class CardController {
 	}
 
 	@PostMapping("/create")
-	public MyCardCreateDto.Response create(@Valid @RequestBody MyCardCreateDto.Request request) {
+	public MyCardCreateDto.Response create(@Schema @Valid @RequestBody MyCardCreateDto.Request request) {
 		return myCardCreateService.run(request);
 	}
 
