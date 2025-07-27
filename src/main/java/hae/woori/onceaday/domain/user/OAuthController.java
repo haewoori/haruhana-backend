@@ -23,7 +23,7 @@ public class OAuthController {
 
 	private final KakaoOAuthService kakaoOAuthService;
 
-	@Value("${oauth.redirect-uri}")
+	@Value("${oauth.client.redirect-uri}")
 	private String clientRedirectUri;
 
 	@GetMapping("/oauth/kakao")

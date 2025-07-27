@@ -31,6 +31,8 @@ public class KakaoOAuthService implements SimpleService<KakaoOAuthDto.Request, K
 
 	@Value("${oauth.kakao.authorization-url}")
 	private String kakaoAuthorizationUrl;
+	@Value("${oauth.server.redirect-uri}")
+	private String serverRedirectUri;
 	@Value("${oauth.kakao.client-id}")
 	private String kakaoClientId;
 	@Value("${oauth.kakao.client-secret}")
@@ -59,7 +61,7 @@ public class KakaoOAuthService implements SimpleService<KakaoOAuthDto.Request, K
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			.bodyValue("grant_type=authorization_code" +
 				"&client_id=" + kakaoClientId +
-				"&redirect_uri=http://localhost:8080/api/v1/user/oauth/kakao" +
+				"&redirect_uri=" + serverRedirectUri +
 				"&code=" + authCode +
 				"&client_secret=" + kakaoClientSecret)
 			.retrieve()

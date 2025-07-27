@@ -35,7 +35,7 @@ public class UserController {
 		})
 	@PostMapping("/create")
 	public UserCreateDto.Response createUser(@RequestBody @Valid UserCreateDto.Request request) {
-		log.info("Hello");
+		log.info("Trying to create user with request: {}", request);
 		return userCreateService.run(request);
 	}
 }
