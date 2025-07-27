@@ -83,7 +83,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i haru-hana-key.pem ubuntu@${{ secrets.EC2_HOST }} << EOF
             # 기존 springboot 프로세스 종료
-            pkill -f 'java -jar' || echo "No process running"
+            sudo kill -9 $(lsof -t -i :8080)
             
             # S3에서 최신 jar 다운로드
             aws s3 cp s3://$S3_BUCKET_NAME/onceaday-0.0.1-SNAPSHOT.jar app.jar
