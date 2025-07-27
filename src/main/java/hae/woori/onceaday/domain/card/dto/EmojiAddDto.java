@@ -6,13 +6,20 @@ public class EmojiAddDto {
 
 	@Schema(name = "EmojiAddDto.Request")
 	public record Request(
-		//TODO: Access Token이 있다면 그걸 기반으로 user 매핑을 하고, 저장해야 할 것.
-		String userId,
 		String cardId,
 		String emojiId
 	) {
-
 	}
+
+	public record RequestWrapper(
+		String userId,
+		String cardId,
+		String emojiId
+	) {}
+	public static RequestWrapper toRequestWrapper(String userId, Request request) {
+		return new RequestWrapper(userId, request.cardId(), request.emojiId());
+	}
+
 	@Schema(name = "EmojiAddDto.Response")
 	public record Response() {
 	}

@@ -8,7 +8,7 @@ oauth:
   client:
     redirect-uri: "http://localhost:3000/login/success?token="
   server:
-    redirect-uri: "http://localhost:8080/api/v1/user/oauth/kakao"
+    redirect-uri: "http://localhost:8080/api/v1/oauth/kakao"
   kakao:
     authorization-url: "https://kauth.kakao.com/oauth/token"
     client-id: ${KAKAO_CLIENT_ID}
