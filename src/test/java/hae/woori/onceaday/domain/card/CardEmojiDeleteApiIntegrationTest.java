@@ -2,6 +2,7 @@ package hae.woori.onceaday.domain.card;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hae.woori.onceaday.AccessTokenGenerator;
 import hae.woori.onceaday.domain.card.dto.EmojiDeleteDto;
 import hae.woori.onceaday.persistence.document.CardDocument;
 import hae.woori.onceaday.persistence.document.EmojiDocument;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import({AccessTokenGenerator.class})
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(OutputCaptureExtension.class)
@@ -44,6 +47,8 @@ class CardEmojiDeleteApiIntegrationTest {
 	private UserDocumentRepository userDocumentRepository;
 	@Autowired
 	private EmojiDocumentRepository emojiDocumentRepository;
+	@Autowired
+	private AccessTokenGenerator accessTokenGenerator;
 
 	@BeforeEach
 	void setUp() {
@@ -60,14 +65,15 @@ class CardEmojiDeleteApiIntegrationTest {
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 		EmojiDocument emojiDocument = EmojiDocument.builder()
 			.emojiUrl("url1")
 			.build();
 		emojiDocument = emojiDocumentRepository.save(emojiDocument);
-		EmojiRecord emojiRecord = new EmojiRecord(emojiDocument.getId(), "url1", "user123");
+		EmojiRecord emojiRecord = new EmojiRecord(emojiDocument.getId(), "url1", user.getId());
 		CardDocument card = CardDocument.builder()
-			.userId("user123")
+			.userId(user.getId())
 			.content("카드 내용")
 			.bgColor("#FFAA00")
 			.emojiRecords(List.of(emojiRecord))
@@ -77,6 +83,7 @@ class CardEmojiDeleteApiIntegrationTest {
 		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request(card.getId());
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/emoji/delete")
 			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isOk());
@@ -88,15 +95,18 @@ class CardEmojiDeleteApiIntegrationTest {
 	@DisplayName("card가 존재하지 않을 때 400 에러 및 DB 값 검증")
 	void deleteEmoji_whenCardNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
+
 		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request("notExistCardId");
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/emoji/delete")
 			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isBadRequest());
@@ -107,18 +117,20 @@ class CardEmojiDeleteApiIntegrationTest {
 	@DisplayName("card에 있는 emojiRecord가 없을 때 로그가 잘 찍혔는지 확인 및 DB 값 검증")
 	void deleteEmoji_whenEmojiRecordNotExists_logsAndNoChange(CapturedOutput output) throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
+
 		EmojiDocument emojiDocument = EmojiDocument.builder()
 			.emojiUrl("url1")
 			.build();
 		emojiDocument = emojiDocumentRepository.save(emojiDocument);
 		CardDocument card = CardDocument.builder()
-			.userId("user123")
+			.userId(user.getId())
 			.content("카드 내용")
 			.bgColor("#FFAA00")
 			.emojiRecords(List.of(new EmojiRecord(emojiDocument.getId(), "url1", "otherUser")))
@@ -128,12 +140,13 @@ class CardEmojiDeleteApiIntegrationTest {
 		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request(card.getId());
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/emoji/delete")
 			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isOk());
 		CardDocument updated = cardDocumentRepository.findById(card.getId()).get();
 		assertThat(updated.getEmojiRecords()).hasSize(1);
-		assertThat(output.getOut()).contains("No emojiRecord found for userId: user123");
+		assertThat(output.getOut()).contains("No emojiRecord found for userId: " + user.getId());
 	}
 }
 
