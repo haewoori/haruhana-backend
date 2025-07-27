@@ -14,16 +14,16 @@ public class UserGateway {
 	private final UserDocumentRepository userDocumentRepository;
 
 	public boolean checkUserExistsById(String userId) {
-		return userDocumentRepository.existsByUserId(userId);
+		return userDocumentRepository.existsById(userId);
 	}
 
 	public UserProfileVo getUserProfileById(String userId) {
-		UserDocument document = userDocumentRepository.findByUserId(userId).orElse(null);
+		UserDocument document = userDocumentRepository.findById(userId).orElse(null);
 		if (document == null) {
 			//TODO: default image로 변경
 			return new UserProfileVo(null, "default_image");
 		}
 
-		return new UserProfileVo(document.getUserId(), document.getImageUrl());
+		return new UserProfileVo(document.getEmail(), document.getImageUrl());
 	}
 }

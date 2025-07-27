@@ -44,7 +44,7 @@ class CardDeleteApiIntegrationTest {
 	@DisplayName("userId, cardId에 매핑되는 card가 존재할 때 삭제 성공 및 DB 값 검증")
 	void deleteCard_whenUserAndCardExists_success() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -70,7 +70,7 @@ class CardDeleteApiIntegrationTest {
 	@DisplayName("cardId가 존재하지 않을 때 400 에러 및 DB 값 검증")
 	void deleteCard_whenCardIdNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -89,7 +89,7 @@ class CardDeleteApiIntegrationTest {
 	@DisplayName("발견된 카드id가 userId와 일치하지 않을 때 400 에러 및 DB 값 검증")
 	void deleteCard_whenUserIdMismatch_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)

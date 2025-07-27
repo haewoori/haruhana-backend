@@ -55,7 +55,7 @@ class CardEmojiDeleteApiIntegrationTest {
 	@DisplayName("emojiRecord가 card에 존재할 때 정상적으로 삭제 및 DB 값 검증")
 	void deleteEmoji_whenEmojiRecordExists_success() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -88,7 +88,7 @@ class CardEmojiDeleteApiIntegrationTest {
 	@DisplayName("card가 존재하지 않을 때 400 에러 및 DB 값 검증")
 	void deleteEmoji_whenCardNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -107,7 +107,7 @@ class CardEmojiDeleteApiIntegrationTest {
 	@DisplayName("card에 있는 emojiRecord가 없을 때 로그가 잘 찍혔는지 확인 및 DB 값 검증")
 	void deleteEmoji_whenEmojiRecordNotExists_logsAndNoChange(CapturedOutput output) throws Exception {
 		UserDocument user = UserDocument.builder()
-			.userId("user123")
+			.email("user123")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)

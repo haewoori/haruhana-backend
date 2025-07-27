@@ -5,3 +5,18 @@ spring:
     mongodb:
       uri: mongodb://appuser:appUser1@localhost:27017/onceaday?authSource=onceaday
       auto-index-creation: true
+
+oauth:
+  redirect-uri: ${CLIENT_OAUTH_REDIRECT_URI_PRD}
+  kakao:
+    authorization-url: "https://kauth.kakao.com/oauth/token"
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration:
+    #1h
+    access-token: 3600000
+    #7d
+    refresh-token: 604800000

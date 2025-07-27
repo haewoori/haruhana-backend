@@ -1,9 +1,10 @@
 ### Create Card
 POST {{BaseUrl}}/api/v1/card/create
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0YW5rM2FAbmF2ZXIuY29tIiwiaWF0IjoxNzUzNTY3MzM1LCJleHAiOjE3NTM1NzA5MzUsInVzZXJJZCI6InRhbmszYUBuYXZlci5jb20ifQ.4T1y0tnujGftL3cfHILhP0UOM0yO9xqSqNd9NPXcWyDvH-8p5DEvOQ2LLV65v81c
 
 {
-  "userId": "tank4a@gmail.com",
+  "userId": "tank3a@naver.com",
   "content": "Hello, this is a new card111!",
   "bgColor": "#FFFFFF"
 }

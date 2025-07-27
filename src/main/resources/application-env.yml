@@ -1,0 +1,40 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: optional:file:.env.properties
+
+oauth:
+  redirect-uri: "http://localhost:3000/login/success?token="
+  kakao:
+    authorization-url: "https://kauth.kakao.com/oauth/token"
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+
+jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration:
+      #1h
+      access-token: 3600000
+      #7d
+      refresh-token: 604800000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prd
+oauth:
+  redirect-uri: ${CLIENT_OAUTH_REDIRECT_URI_PRD}
+  kakao:
+    authorization-url: "https://kauth.kakao.com/oauth/token"
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration:
+    #1h
+    access-token: 3600000
+    #7d
+    refresh-token: 604800000

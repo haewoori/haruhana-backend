@@ -20,9 +20,9 @@ public class UserDocument {
 	@Id
 	private String id;
 	@NotNull
-	@Field(value = "user_id")
+	@Field(value = "email")
 	@Indexed(unique = true)
-	private String userId;
+	private String email;
 	@NotNull
 	@Field(value = "name")
 	private String name;

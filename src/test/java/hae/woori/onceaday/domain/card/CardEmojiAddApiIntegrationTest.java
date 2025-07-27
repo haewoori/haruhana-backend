@@ -50,7 +50,7 @@ class CardEmojiAddApiIntegrationTest {
     @DisplayName("카드에 처음 emoji를 추가하는 userId일 때 정상적으로 추가 및 DB 값 검증")
     void addEmoji_whenFirstTime_success() throws Exception {
         UserDocument user = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .imageUrl("http://example.com/image.jpg")
                 .gender(0)
@@ -77,7 +77,7 @@ class CardEmojiAddApiIntegrationTest {
         assertThat(updated.getEmojiRecords()).hasSize(1);
         EmojiRecord record = updated.getEmojiRecords().getFirst();
 
-		EmojiRecord expected = new EmojiRecord(emoji.getId(), emoji.getEmojiUrl(), user.getUserId());
+		EmojiRecord expected = new EmojiRecord(emoji.getId(), emoji.getEmojiUrl(), user.getEmail());
 		assertThat(record)
 			.usingRecursiveComparison()
 			.isEqualTo(expected);
@@ -87,7 +87,7 @@ class CardEmojiAddApiIntegrationTest {
     @DisplayName("카드에 이미 추가한적이 있는 userId일 때 기존 emoji가 교체됨 및 DB 값 검증")
     void addEmoji_whenAlreadyExists_replacesEmoji() throws Exception {
         UserDocument user = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .imageUrl("http://example.com/image.jpg")
                 .gender(0)
@@ -101,7 +101,7 @@ class CardEmojiAddApiIntegrationTest {
                 .userId("user123")
                 .content("카드 내용")
                 .bgColor("#FFAA00")
-                .emojiRecords(List.of(new EmojiRecord(oldEmoji.getId(), oldEmoji.getEmojiUrl(), user.getUserId())))
+                .emojiRecords(List.of(new EmojiRecord(oldEmoji.getId(), oldEmoji.getEmojiUrl(), user.getEmail())))
                 .build();
         card = cardDocumentRepository.save(card);
         EmojiDocument newEmoji = EmojiDocument.builder()
@@ -119,7 +119,7 @@ class CardEmojiAddApiIntegrationTest {
         assertThat(updated.getEmojiRecords()).hasSize(1);
         EmojiRecord record = updated.getEmojiRecords().getFirst();
 
-		EmojiRecord expected = new EmojiRecord(newEmoji.getId(), newEmoji.getEmojiUrl(), user.getUserId());
+		EmojiRecord expected = new EmojiRecord(newEmoji.getId(), newEmoji.getEmojiUrl(), user.getEmail());
 		assertThat(record)
 			.usingRecursiveComparison()
 			.isEqualTo(expected);
@@ -129,7 +129,7 @@ class CardEmojiAddApiIntegrationTest {
     @DisplayName("카드가 존재하지 않을 때 400 에러 및 DB 값 검증")
     void addEmoji_whenCardNotExists_fail() throws Exception {
         UserDocument user = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .imageUrl("http://example.com/image.jpg")
                 .gender(0)
@@ -154,7 +154,7 @@ class CardEmojiAddApiIntegrationTest {
     @DisplayName("이모티콘이 존재하지 않을 때 400 에러 및 DB 값 검증")
     void addEmoji_whenEmojiNotExists_fail() throws Exception {
         UserDocument user = UserDocument.builder()
-                .userId("user123")
+                .email("user123")
                 .name("홍길동")
                 .imageUrl("http://example.com/image.jpg")
                 .gender(0)
