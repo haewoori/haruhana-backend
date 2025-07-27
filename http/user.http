@@ -3,7 +3,7 @@ POST {{BaseUrl}}/api/v1/user/create
 Content-Type: application/json
 
 {
-  "userId": "tank3a@naver.com",
+  "email": "tank3a@naver.com",
   "name": "김종원",
   "nickname": "탱크3세",
   "imageUrl": "http.example.com/image.jpg",

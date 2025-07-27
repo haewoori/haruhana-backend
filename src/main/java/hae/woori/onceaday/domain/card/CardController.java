@@ -58,22 +58,25 @@ public class CardController {
 	@PostMapping("/create")
 	public MyCardCreateDto.Response create(@Schema @Valid @RequestBody MyCardCreateDto.Request request, Authentication authentication) {
 		String userId = (String) authentication.getPrincipal();
-		log.info("User ID {} creating card with request: {}", request);
+		log.info("User ID {} creating card with request: {}", userId, request);
 		return myCardCreateService.run(MyCardCreateDto.toRequestWrapper(request, userId));
 	}
 
 	@DeleteMapping("/delete/{cardId}")
-	public MyCardDeleteDto.Response delete(@PathVariable String cardId, @RequestBody MyCardDeleteDto.Request request) {
-		return myCardDeleteService.run(MyCardDeleteDto.requestWrapperFrom(request, cardId));
+	public MyCardDeleteDto.Response delete(@PathVariable String cardId, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		return myCardDeleteService.run(MyCardDeleteDto.requestWrapperFrom(userId, cardId));
 	}
 
 	@PostMapping("/emoji/add")
-	public EmojiAddDto.Response addEmoji(@Valid @RequestBody EmojiAddDto.Request request) {
-		return emojiAddService.run(request);
+	public EmojiAddDto.Response addEmoji(@Valid @RequestBody EmojiAddDto.Request request, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		return emojiAddService.run(EmojiAddDto.toRequestWrapper(userId, request));
 	}
 
 	@DeleteMapping("/emoji/delete")
-	public EmojiDeleteDto.Response deleteEmoji(@Valid @RequestBody EmojiDeleteDto.Request request) {
-		return emojiDeleteService.run(request);
+	public EmojiDeleteDto.Response deleteEmoji(@Valid @RequestBody EmojiDeleteDto.Request request, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		return emojiDeleteService.run(EmojiDeleteDto.toRequestWrapper(userId, request));
 	}
 }

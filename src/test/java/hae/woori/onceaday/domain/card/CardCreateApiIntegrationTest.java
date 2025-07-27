@@ -47,22 +47,22 @@ class CardCreateApiIntegrationTest {
 	@DisplayName("userId가 UserDocument에 존재할 때 카드 정상 생성 및 DB 값 검증")
 	void createCard_whenUserExists_success() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.nickname("test123")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(1)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
 
 		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-			"user123",
 			"카드 내용입니다.",
 			"#FFAA00"
 		);
 
 		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
 			.contentType(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + user.getId())
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isOk());
@@ -84,7 +84,6 @@ class CardCreateApiIntegrationTest {
 	@DisplayName("userId가 UserDocument에 존재하지 않을 때 400 에러 및 DB 저장 실패")
 	void createCard_whenUserNotExists_fail() throws Exception {
 		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-			"user123",
 			"카드 내용입니다.",
 			"#FFAA00"
 		);
@@ -101,7 +100,7 @@ class CardCreateApiIntegrationTest {
 	@DisplayName("bgColor가 정규식에 맞지 않을 때 400 에러 및 DB 저장 실패")
 	void createCard_whenBgColorInvalid_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -109,7 +108,6 @@ class CardCreateApiIntegrationTest {
 		userDocumentRepository.save(user);
 
 		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-			"user123",
 			"카드 내용입니다.",
 			"123456"
 		);
@@ -126,7 +124,7 @@ class CardCreateApiIntegrationTest {
 	@DisplayName("content가 60자를 초과할 때 400 에러 및 DB 저장 실패")
 	void createCard_whenContentTooLong_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
-			.email("user123")
+			.email("tank3a@gmail.com")
 			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -134,7 +132,6 @@ class CardCreateApiIntegrationTest {
 		userDocumentRepository.save(user);
 
 		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
-			"user123",
 			"a".repeat(61),
 			"#FFAA00"
 		);

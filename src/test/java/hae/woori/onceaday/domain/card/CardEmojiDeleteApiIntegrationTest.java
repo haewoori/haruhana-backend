@@ -74,7 +74,7 @@ class CardEmojiDeleteApiIntegrationTest {
 			.build();
 		card = cardDocumentRepository.save(card);
 
-		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request("user123", card.getId());
+		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request(card.getId());
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/emoji/delete")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
@@ -94,7 +94,7 @@ class CardEmojiDeleteApiIntegrationTest {
 			.gender(0)
 			.build();
 		userDocumentRepository.save(user);
-		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request("user123", "notExistCardId");
+		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request("notExistCardId");
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/emoji/delete")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
@@ -125,7 +125,7 @@ class CardEmojiDeleteApiIntegrationTest {
 			.build();
 		card = cardDocumentRepository.save(card);
 
-		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request("user123", card.getId());
+		EmojiDeleteDto.Request request = new EmojiDeleteDto.Request(card.getId());
 		ResultActions result = mockMvc.perform(delete("/api/v1/card/emoji/delete")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));

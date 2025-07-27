@@ -16,12 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmojiDeleteService implements SimpleService<EmojiDeleteDto.Request, EmojiDeleteDto.Response> {
+public class EmojiDeleteService implements SimpleService<EmojiDeleteDto.RequestWrapper, EmojiDeleteDto.Response> {
 
 	private final CardDocumentRepository cardDocumentRepository;
 
 	@Override
-	public EmojiDeleteDto.Response run(EmojiDeleteDto.Request request) {
+	public EmojiDeleteDto.Response run(EmojiDeleteDto.RequestWrapper request) {
 		CardDocument cardDocument = cardDocumentRepository.findById(request.cardId())
 			.orElseThrow(() -> new ClientSideException("Card not found with id: " + request.cardId()));
 
