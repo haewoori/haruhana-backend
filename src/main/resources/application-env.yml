@@ -28,6 +28,8 @@ spring:
   config:
     activate:
       on-profile: prd
+    import: optional:file:.env.properties
+
 oauth:
   client:
     redirect-uri: ${CLIENT_OAUTH_REDIRECT_URI_PRD}
