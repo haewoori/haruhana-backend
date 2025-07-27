@@ -19,9 +19,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/card")
 @RequiredArgsConstructor
@@ -45,30 +48,35 @@ public class CardController {
 		)
 	})
 	public MyCardSearchDto.Response searchCard(
-		@RequestParam @Valid @Pattern(regexp = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))") String date,
-			//TODO: OAuth 추가 후 access token이용
-		@RequestParam String userId) {
+		@RequestParam @Valid @Pattern(regexp = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))") String date, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		log.info("User ID {} trying to search cards for date {}", userId, date);
 		MyCardSearchDto.Request request = new MyCardSearchDto.Request(LocalDate.parse(date), userId); // Replace "defaultUserId" with actual user ID logic
 		return cardSearchService.run(request);
 	}
 
 	@PostMapping("/create")
-	public MyCardCreateDto.Response create(@Schema @Valid @RequestBody MyCardCreateDto.Request request) {
-		return myCardCreateService.run(request);
+	public MyCardCreateDto.Response create(@Schema @Valid @RequestBody MyCardCreateDto.Request request, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		log.info("User ID {} creating card with request: {}", userId, request);
+		return myCardCreateService.run(MyCardCreateDto.toRequestWrapper(request, userId));
 	}
 
 	@DeleteMapping("/delete/{cardId}")
-	public MyCardDeleteDto.Response delete(@PathVariable String cardId, @RequestBody MyCardDeleteDto.Request request) {
-		return myCardDeleteService.run(MyCardDeleteDto.requestWrapperFrom(request, cardId));
+	public MyCardDeleteDto.Response delete(@PathVariable String cardId, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		return myCardDeleteService.run(MyCardDeleteDto.requestWrapperFrom(userId, cardId));
 	}
 
 	@PostMapping("/emoji/add")
-	public EmojiAddDto.Response addEmoji(@Valid @RequestBody EmojiAddDto.Request request) {
-		return emojiAddService.run(request);
+	public EmojiAddDto.Response addEmoji(@Valid @RequestBody EmojiAddDto.Request request, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		return emojiAddService.run(EmojiAddDto.toRequestWrapper(userId, request));
 	}
 
 	@DeleteMapping("/emoji/delete")
-	public EmojiDeleteDto.Response deleteEmoji(@Valid @RequestBody EmojiDeleteDto.Request request) {
-		return emojiDeleteService.run(request);
+	public EmojiDeleteDto.Response deleteEmoji(@Valid @RequestBody EmojiDeleteDto.Request request, Authentication authentication) {
+		String userId = (String) authentication.getPrincipal();
+		return emojiDeleteService.run(EmojiDeleteDto.toRequestWrapper(userId, request));
 	}
 }

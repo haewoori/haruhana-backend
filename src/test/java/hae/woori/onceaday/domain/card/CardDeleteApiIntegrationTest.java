@@ -2,7 +2,6 @@ package hae.woori.onceaday.domain.card;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hae.woori.onceaday.domain.card.dto.MyCardDeleteDto;
 import hae.woori.onceaday.persistence.document.CardDocument;
 import hae.woori.onceaday.persistence.document.UserDocument;
 import hae.woori.onceaday.persistence.repository.CardDocumentRepository;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -27,8 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CardDeleteApiIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
 	@Autowired
 	private CardDocumentRepository cardDocumentRepository;
 	@Autowired
@@ -57,10 +53,7 @@ class CardDeleteApiIntegrationTest {
 			.build();
 		card = cardDocumentRepository.save(card);
 
-		MyCardDeleteDto.Request request = new MyCardDeleteDto.Request("user123");
-		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", card.getId())
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", card.getId()));
 
 		result.andExpect(status().isOk());
 		assertThat(cardDocumentRepository.findById(card.getId())).isEmpty();
@@ -76,10 +69,7 @@ class CardDeleteApiIntegrationTest {
 			.gender(0)
 			.build();
 		userDocumentRepository.save(user);
-		MyCardDeleteDto.Request request = new MyCardDeleteDto.Request("user123");
-		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", "notExistId")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", "notExistId"));
 
 		result.andExpect(status().isBadRequest());
 		assertThat(cardDocumentRepository.findAll()).isEmpty();
@@ -102,10 +92,7 @@ class CardDeleteApiIntegrationTest {
 			.build();
 		card = cardDocumentRepository.save(card);
 
-		MyCardDeleteDto.Request request = new MyCardDeleteDto.Request("otherUser");
-		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", card.getId())
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(delete("/api/v1/card/delete/{cardId}", card.getId()));
 
 		result.andExpect(status().isBadRequest());
 		assertThat(cardDocumentRepository.findById(card.getId())).isPresent();

@@ -15,7 +15,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
@@ -36,6 +38,7 @@ public class JwtUtil {
 		String accessToken = generateAccessToken(userId, now, accessTokenExpireTime);
 		String refreshToken = generateRefreshToken(userId, now, refreshTokenExpireTime);
 
+		log.info("User ID: {} generated access token: {}", userId, accessToken);
 		saveRefreshToken(userId, refreshToken, refreshTokenExpireTime);
 		return new TokenVo(accessToken, refreshToken, refreshTokenExpireTime);
 	}

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 public class UserCreateDto {
 	@Schema(name = "UserCreateDto.Request")
 	public record Request(
-		@NotNull String userId,
+		@NotNull String email,
 		@NotNull String name,
 		String imageUrl,
 		String nickname,

@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CardMapper {
 
-    CardDocument createRequestToCardDocument(MyCardCreateDto.Request request);
+    CardDocument createRequestWrapperToCardDocument(MyCardCreateDto.RequestWrapper request);
 
     List<CardVo> cardDocumentsToCardVos(List<CardDocument> cardDocuments);
 

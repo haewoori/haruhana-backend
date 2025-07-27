@@ -1,7 +1,7 @@
 ### Create Card
 POST {{BaseUrl}}/api/v1/card/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0YW5rM2FAbmF2ZXIuY29tIiwiaWF0IjoxNzUzNTY3MzM1LCJleHAiOjE3NTM1NzA5MzUsInVzZXJJZCI6InRhbmszYUBuYXZlci5jb20ifQ.4T1y0tnujGftL3cfHILhP0UOM0yO9xqSqNd9NPXcWyDvH-8p5DEvOQ2LLV65v81c
+Authorization: Bearer {{AccessToken}}
 
 {
   "userId": "tank3a@naver.com",
@@ -12,20 +12,18 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0YW5rM2FAbmF2ZXIuY29tIiwia
 ### Delete Card
 DELETE {{BaseUrl}}/api/v1/card/delete/{{CardId}}
 Content-Type: application/json
-
-{
-  "userId": "tank3a@gmail.com"
-}
+Authorization: Bearer {{AccessToken}}
 
 ### Get Card List
 GET {{BaseUrl}}/api/v1/card/get?date=2025-07-27&userId=tank3a@naver.com
+Authorization: Bearer {{AccessToken}}
 
 ### Add Emoji to Card
 POST {{BaseUrl}}/api/v1/card/emoji/add
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-  "userId": "{{UserId}}",
   "cardId": "{{CardId}}",
   "emojiId": "{{EmojiId}}"
 }
@@ -33,8 +31,8 @@ Content-Type: application/json
 ### Delete Emoji to Card
 DELETE {{BaseUrl}}/api/v1/card/emoji/delete
 Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
 
 {
-  "userId": "{{UserId}}",
   "cardId": "{{CardId}}"
 }

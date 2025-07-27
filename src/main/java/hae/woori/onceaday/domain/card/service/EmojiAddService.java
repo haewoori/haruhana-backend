@@ -15,27 +15,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class EmojiAddService implements SimpleService<EmojiAddDto.Request, EmojiAddDto.Response> {
+public class EmojiAddService implements SimpleService<EmojiAddDto.RequestWrapper, EmojiAddDto.Response> {
 
 	private final CardDocumentRepository cardDocumentRepository;
 	private final EmojiDocumentRepository emojiDocumentRepository;
 	private final UserGateway userGateway;
 
 	@Override
-	public EmojiAddDto.Response run(EmojiAddDto.Request input) {
-		CardDocument cardDocument = cardDocumentRepository.findById(input.cardId())
-			.orElseThrow(() -> new ClientSideException("Card not found with id: " + input.cardId()));
-		if (!userGateway.checkUserExistsById(input.userId())) {
-			throw new ClientSideException("User does not exist with userId: " + input.userId());
+	public EmojiAddDto.Response run(EmojiAddDto.RequestWrapper request) {
+		CardDocument cardDocument = cardDocumentRepository.findById(request.cardId())
+			.orElseThrow(() -> new ClientSideException("Card not found with id: " + request.cardId()));
+		if (!userGateway.checkUserExistsById(request.userId())) {
+			throw new ClientSideException("User does not exist with userId: " + request.userId());
 		}
 
-		EmojiDocument emojiDocument = emojiDocumentRepository.findById(input.emojiId())
-			.orElseThrow(() -> new ClientSideException("Emoji does not exist with emojiId: " + input.emojiId()));
+		EmojiDocument emojiDocument = emojiDocumentRepository.findById(request.emojiId())
+			.orElseThrow(() -> new ClientSideException("Emoji does not exist with emojiId: " + request.emojiId()));
 
-		EmojiRecord recordToAdd = new EmojiRecord(input.emojiId(), emojiDocument.getEmojiUrl(), input.userId());
+		EmojiRecord recordToAdd = new EmojiRecord(request.emojiId(), emojiDocument.getEmojiUrl(), request.userId());
 		cardDocument.getEmojiRecords()
 			.stream()
-			.filter(emojiRecord -> emojiRecord.userId().equals(input.userId()))
+			.filter(emojiRecord -> emojiRecord.userId().equals(request.userId()))
 			.findFirst()
 			.ifPresentOrElse(originalRecord -> {
 				cardDocument.getEmojiRecords().remove(originalRecord);

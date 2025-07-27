@@ -78,7 +78,7 @@ class UserCreateApiIntegrationTest {
 		ResultActions result = mockMvc.perform(post("/api/v1/user/create").contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 
-		result.andExpect(status().isInternalServerError());
+		result.andExpect(status().isBadRequest());
 		assertThat(userDocumentRepository.findAll()).hasSize(1);
 	}
 }
