@@ -88,6 +88,7 @@ jobs:
             # S3에서 최신 jar 다운로드
             aws s3 cp s3://$S3_BUCKET_NAME/onceaday-0.0.1-SNAPSHOT.jar app.jar
 
+            rm -f .env.properties
             echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env.properties
             echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env.properties
             echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env.properties
