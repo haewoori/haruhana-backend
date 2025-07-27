@@ -45,17 +45,17 @@ jobs:
       - name: Build with Gradle
         run: |
           export $(cat .env | xargs)  # 환경변수 주입
-          ./gradlew build -x test --no-daemon
+          ./gradlew clean bootJar -x test
 
       # 6. 빌드된 jar에 타임스탬프 붙이기
       - name: Copy Jar with Timestamp
         id: jar
         run: |
           TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-          JAR_FILE=$(ls ./build/libs/*.jar | head -n 1)
+          JAR_FILE=$(ls ./build/libs/*-boot.jar | head -n 1)
           TARGET_NAME="app-$TIMESTAMP.jar"
           cp "$JAR_FILE" "$TARGET_NAME"
-          echo "jar_name=$TARGET_NAME" >> "$GITHUB_OUTPUT"
+          echo "jar_name=$TARGET_NAME" >> $GITHUB_OUTPUT
 
       - name: Upload built JAR as artifact
         uses: actions/upload-artifact@v4
@@ -75,10 +75,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
           aws-region: ap-northeast-2
 
-      - name: Download built JAR
-        uses: actions/download-artifact@v4
-        with:
-          name: built-jar
+      - name: Download artifact name
+        run: echo "JAR_NAME=${{ needs.build.outputs.jar_name }}" >> $GITHUB_ENV
         
       # 8. S3에 업로드
       - name: Upload to S3
@@ -101,7 +99,7 @@ jobs:
             pkill -f 'java -jar' || echo "No process running"
             
             # S3에서 최신 jar 다운로드
-            aws s3 cp s3://$S3_BUCKET_NAME/${{ needs.build.outputs.jar_name }} ~/springboot-app.jar
+            aws s3 cp s3://$S3_BUCKET_NAME/      - name: Download artifact name
             
             # 새 jar 실행
             nohup java -Dspring.profiles.active=prd -jar ~/springboot-app.jar > app.log 2>&1 &
