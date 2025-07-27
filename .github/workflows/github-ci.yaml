@@ -31,26 +31,9 @@ jobs:
       - name: Grant Execute Permission
         run: chmod +x ./gradlew
 
-      # 4. JWT_SECRET_KEY를 포함한 .env 파일 생성
-      - name: Generate .env file
-        run: |
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
-          echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
-          echo "MONGO_PRD_URL=${{ secrets.MONGO_PRD_URL }}" >> .env
-          echo "SERVER_OAUTH_REDIRECT_URI_PRD=${{ secrets.SERVER_OAUTH_REDIRECT_URI_PRD }}" >> .env
-          echo "CLIENT_OAUTH_REDIRECT_URI_PRD=${{ secrets.CLIENT_OAUTH_REDIRECT_URI_PRD }}" >> .env
-
       # 5. Gradle 빌드 (.env 반영하여 환경변수로 실행)
       - name: Build with Gradle
         run: ./gradlew clean bootJar -x test
-        env:
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-          MONGO_PRD_URL: ${{ secrets.MONGO_PRD_URL }}
-          SERVER_OAUTH_REDIRECT_URI_PRD: ${{ secrets.SERVER_OAUTH_REDIRECT_URI_PRD }}
-          CLIENT_OAUTH_REDIRECT_URI_PRD: ${{ secrets.CLIENT_OAUTH_REDIRECT_URI_PRD }}
 
       # 6. 빌드된 jar에 타임스탬프 붙이기
       - name: Copy Jar with Timestamp
@@ -104,6 +87,13 @@ jobs:
             
             # S3에서 최신 jar 다운로드
             aws s3 cp s3://$S3_BUCKET_NAME/onceaday-0.0.1-SNAPSHOT.jar app.jar
+
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env.properties
+            echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env.properties
+            echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env.properties
+            echo "MONGO_PRD_URL=${{ secrets.MONGO_PRD_URL }}" >> .env.properties
+            echo "SERVER_OAUTH_REDIRECT_URI_PRD=${{ secrets.SERVER_OAUTH_REDIRECT_URI_PRD }}" >> .env.properties
+            echo "CLIENT_OAUTH_REDIRECT_URI_PRD=${{ secrets.CLIENT_OAUTH_REDIRECT_URI_PRD }}" >> .env.properties
             
             # 새 jar 실행
             nohup java -Dspring.profiles.active=prd -jar ~/app.jar > app.log 2>&1 &
