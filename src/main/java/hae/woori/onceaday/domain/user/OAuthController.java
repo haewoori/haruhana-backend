@@ -26,7 +26,7 @@ public class OAuthController {
 	@Value("${oauth.client.redirect-uri}")
 	private String clientRedirectUri;
 
-	@GetMapping("/oauth/kakao")
+	@GetMapping("/kakao")
 	public void getAuthKakao(@RequestParam String code, HttpServletResponse response) throws IOException {
 		KakaoOAuthDto.Response responseData = kakaoOAuthService.run(new KakaoOAuthDto.Request(code));
 
