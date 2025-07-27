@@ -12,6 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      jar_name: ${{ steps.jar.outputs.jar_name }}
 
     steps:
       # 1. Git Checkout
@@ -53,7 +55,7 @@ jobs:
           JAR_FILE=$(ls ./build/libs/*.jar | head -n 1)
           TARGET_NAME="app-$TIMESTAMP.jar"
           cp "$JAR_FILE" "$TARGET_NAME"
-          echo "jar_name=$TARGET_NAME" >> $GITHUB_OUTPUT
+          echo "jar_name=$TARGET_NAME" >> "$GITHUB_OUTPUT"
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,7 +75,7 @@ jobs:
       # 8. S3에 업로드
       - name: Upload to S3
         run: |
-          aws s3 cp ${{ steps.jar.outputs.jar_name }} s3://$S3_BUCKET_NAME/
+          aws s3 cp $JAR_NAME s3://$S3_BUCKET_NAME/
 
       # 9. EC2 SSH PEM키 Decode
       - name: Decode SSH key
