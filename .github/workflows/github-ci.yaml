@@ -101,5 +101,5 @@ jobs:
             aws s3 cp s3://$S3_BUCKET_NAME/      - name: Download artifact name
             
             # 새 jar 실행
-            nohup java -Dspring.profiles.active=prd -jar ~/springboot-app.jar > app.log 2>&1 &
+            nohup java -Dspring.profiles.active=prd -jar ~/$JAR_FILE > app.log 2>&1 &
           EOF
