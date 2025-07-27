@@ -51,11 +51,8 @@ jobs:
       - name: Copy Jar with Timestamp
         id: jar
         run: |
-          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
           JAR_FILE=$(ls ./build/libs/*.jar | head -n 1)
-          TARGET_NAME="app-$TIMESTAMP.jar"
-          cp "$JAR_FILE" "$TARGET_NAME"
-          echo "jar_name=$TARGET_NAME" >> $GITHUB_OUTPUT
+          echo "jar_name=$JAR_FILE" >> $GITHUB_OUTPUT
 
       - name: Upload built JAR as artifact
         uses: actions/upload-artifact@v4
@@ -83,7 +80,7 @@ jobs:
         run: |
           JAR_FILE=$(ls *.jar | head -n 1)
           echo "Uploading $JAR_FILE"
-          aws s3 cp "$JAR_FILE" s3://$S3_BUCKET_NAME/
+          aws s3 cp "$JAR_NAME" s3://$S3_BUCKET_NAME/
 
       # 9. EC2 SSH PEM키 Decode
       - name: Decode SSH key
