@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -13,7 +14,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-@TestConfiguration
+@TestComponent
 public class AccessTokenGenerator {
 
 	@Value("${jwt.expiration.access-token}")
@@ -21,7 +22,6 @@ public class AccessTokenGenerator {
 	@Value("${jwt.secret-key}")
 	private String secretKey;
 
-	@Bean
 	public String generateAccessToken(String userId) {
 		Date now = new Date();
 		Date accessTokenExpireTime = new Date(now.getTime() + accessTokenExpirePeriod);

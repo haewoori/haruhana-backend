@@ -2,6 +2,7 @@ package hae.woori.onceaday.domain.card;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hae.woori.onceaday.AccessTokenGenerator;
 import hae.woori.onceaday.domain.card.dto.MyCardCreateDto;
 import hae.woori.onceaday.persistence.document.CardDocument;
 import hae.woori.onceaday.persistence.document.UserDocument;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -24,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import({AccessTokenGenerator.class})
 @SpringBootTest
 @AutoConfigureMockMvc
 class CardCreateApiIntegrationTest {
@@ -36,6 +39,8 @@ class CardCreateApiIntegrationTest {
 	private CardDocumentRepository cardDocumentRepository;
 	@Autowired
 	private UserDocumentRepository userDocumentRepository;
+	@Autowired
+	private AccessTokenGenerator accessTokenGenerator;
 
 	@BeforeEach
 	void setUp() {
@@ -54,6 +59,7 @@ class CardCreateApiIntegrationTest {
 			.gender(1)
 			.build();
 		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 
 		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
 			"카드 내용입니다.",
@@ -62,7 +68,7 @@ class CardCreateApiIntegrationTest {
 
 		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
 			.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", "Bearer " + user.getId())
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isOk());
@@ -72,7 +78,7 @@ class CardCreateApiIntegrationTest {
 		CardDocument expected = CardDocument.builder()
 			.bgColor("#FFAA00")
 			.content("카드 내용입니다.")
-			.userId("user123")
+			.userId(user.getId())
 			.build();
 		assertThat(cards.getFirst()).usingRecursiveComparison()
 			.ignoringFields("id", "createTime", "emojiRecords")
@@ -87,9 +93,11 @@ class CardCreateApiIntegrationTest {
 			"카드 내용입니다.",
 			"#FFAA00"
 		);
+		String accessToken = accessTokenGenerator.generateAccessToken("invalid_user_id");
 
 		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
 			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isBadRequest());
@@ -105,7 +113,8 @@ class CardCreateApiIntegrationTest {
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 
 		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
 			"카드 내용입니다.",
@@ -114,6 +123,7 @@ class CardCreateApiIntegrationTest {
 
 		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
 			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isBadRequest());
@@ -129,7 +139,8 @@ class CardCreateApiIntegrationTest {
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
-		userDocumentRepository.save(user);
+		user = userDocumentRepository.save(user);
+		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 
 		MyCardCreateDto.Request request = new MyCardCreateDto.Request(
 			"a".repeat(61),
@@ -138,6 +149,7 @@ class CardCreateApiIntegrationTest {
 
 		ResultActions result = mockMvc.perform(post("/api/v1/card/create")
 			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + accessToken)
 			.content(objectMapper.writeValueAsString(request)));
 
 		result.andExpect(status().isBadRequest());
