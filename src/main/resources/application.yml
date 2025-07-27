@@ -4,7 +4,10 @@ spring:
     group:
       local:
         - "mongo-local"
+        - "env-local"
       prd:
         - "mongo-prd"
+        - "env-prd"
     include:
+      - "env"
       - "mongo"

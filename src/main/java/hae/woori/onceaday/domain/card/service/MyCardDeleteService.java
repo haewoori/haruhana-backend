@@ -21,7 +21,7 @@ public class MyCardDeleteService implements SimpleService<MyCardDeleteDto.Reques
         CardDocument cardDocument = cardDocumentRepository.findById(request.cardId())
                 .orElseThrow(() -> new ClientSideException("Card not found with ID: " + request.cardId()));
 
-        if(!cardDocument.getUserId().equals(request.userId())) {
+        if (!cardDocument.getUserId().equals(request.userId())) {
             log.error("Wrong user trying to delete card: {}", request.userId());
             throw new ClientSideException("Wrong user ID");
         }

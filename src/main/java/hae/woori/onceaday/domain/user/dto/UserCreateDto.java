@@ -1,14 +1,19 @@
 package hae.woori.onceaday.domain.user.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 public class UserCreateDto {
-
-    public record Request(
-        @NotNull String userId,
-        @NotNull String name,
-        String nickname,
-        Integer gender
-    ) {}
-    public record Response() {}
+	@Schema(name = "UserCreateDto.Request")
+	public record Request(
+		@NotNull String userId,
+		@NotNull String name,
+		String imageUrl,
+		String nickname,
+		Integer gender
+	) {
+	}
+	@Schema(name = "UserCreateDto.Response")
+	public record Response() {
+	}
 }

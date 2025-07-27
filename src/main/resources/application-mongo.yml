@@ -6,6 +6,14 @@ spring:
     mongodb:
       uri: mongodb://appuser:appUser1@localhost:27017/onceaday?authSource=onceaday
       auto-index-creation: true
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
 
 ---
 
@@ -15,5 +23,5 @@ spring:
       on-profile: prd
   data:
     mongodb:
-      uri: mongodb://appuser:appUser1@localhost:27017/onceaday?authSource=onceaday
+      uri: ${MONGO_PRD_URL}
       auto-index-creation: true

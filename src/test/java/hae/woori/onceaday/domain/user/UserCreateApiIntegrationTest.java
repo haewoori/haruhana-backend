@@ -1,9 +1,11 @@
 package hae.woori.onceaday.domain.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import hae.woori.onceaday.domain.user.dto.UserCreateDto;
-import hae.woori.onceaday.persistence.UserDocumentRepository;
+import hae.woori.onceaday.persistence.repository.UserDocumentRepository;
 import hae.woori.onceaday.persistence.document.UserDocument;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,63 +24,62 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserCreateApiIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Autowired
-    private UserDocumentRepository userDocumentRepository;
+	@Autowired
+	private UserDocumentRepository userDocumentRepository;
 
-    @BeforeEach
-    void setUp() {
-        userDocumentRepository.deleteAll();
-    }
+	@BeforeEach
+	void setUp() {
+		userDocumentRepository.deleteAll();
+	}
 
-    @Test
-    @DisplayName("사용자 정상 생성")
-    void createUser_success() throws Exception {
-        UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "탱크3세", 0);
+	@Test
+	@DisplayName("사용자 정상 생성")
+	void createUser_success() throws Exception {
+		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "http://example.com/image.jpg", "탱크3세", 0);
 
-        ResultActions result = mockMvc.perform(post("/api/v1/user/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(post("/api/v1/user/create").contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
 
-        UserDocument expected = UserDocument.builder()
-                .userId("tank3a@gmail.com")
-                .name("김종원")
-                .nickname("탱크3세")
-                .gender(0)
-                .build();
-        result.andExpect(status().isOk());
-        assertThat(userDocumentRepository.findAll()).hasSize(1);
-        assertThat(expected)
-                .usingRecursiveComparison()
-                .ignoringFields("id", "createdTime")
-                .isEqualTo(userDocumentRepository.findAll().getFirst());
-    }
+		UserDocument expected = UserDocument.builder()
+			.email("tank3a@gmail.com")
+			.name("김종원")
+			.nickname("탱크3세")
+			.imageUrl("http://example.com/image.jpg")
+			.gender(0)
+			.build();
+		result.andExpect(status().isOk());
+		assertThat(userDocumentRepository.findAll()).hasSize(1);
+		assertThat(userDocumentRepository.findAll().getFirst()).usingRecursiveComparison()
+			.ignoringFields("id", "createdTime")
+			.isEqualTo(expected);
+	}
 
-    @Test
-    @DisplayName("중복 사용자 생성 시 예외 발생")
-    void createUser_duplicate() throws Exception {
-        // 먼저 사용자 생성
-        UserDocument user = UserDocument.builder()
-                .userId("tank3a@gmail.com")
-                .name("김종원")
-                .nickname("탱크3세")
-                .gender(0)
-                .build();
-        userDocumentRepository.save(user);
+	@Test
+	@DisplayName("중복 사용자 생성 시 예외 발생")
+	void createUser_duplicate() throws Exception {
+		// 먼저 사용자 생성
+		UserDocument user = UserDocument.builder()
+			.email("tank3a@gmail.com")
+			.name("김종원")
+			.imageUrl("http://example.com/image.jpg")
+			.nickname("탱크3세")
+			.gender(0)
+			.build();
+		userDocumentRepository.save(user);
 
-        UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "탱크3세", 0);
+		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "http://example.com/image.jpg", "탱크3세", 0);
 
-        ResultActions result = mockMvc.perform(post("/api/v1/user/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+		ResultActions result = mockMvc.perform(post("/api/v1/user/create").contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
 
-        result.andExpect(status().isInternalServerError());
-        assertThat(userDocumentRepository.findAll()).hasSize(1);
-    }
+		result.andExpect(status().isInternalServerError());
+		assertThat(userDocumentRepository.findAll()).hasSize(1);
+	}
 }
 

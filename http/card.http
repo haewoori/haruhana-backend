@@ -1,10 +1,11 @@
 ### Create Card
 POST {{BaseUrl}}/api/v1/card/create
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0YW5rM2FAbmF2ZXIuY29tIiwiaWF0IjoxNzUzNTY3MzM1LCJleHAiOjE3NTM1NzA5MzUsInVzZXJJZCI6InRhbmszYUBuYXZlci5jb20ifQ.4T1y0tnujGftL3cfHILhP0UOM0yO9xqSqNd9NPXcWyDvH-8p5DEvOQ2LLV65v81c
 
 {
-  "userId": "tank3a@gmail.com",
-  "content": "Hello, this is a new card!",
+  "userId": "tank3a@naver.com",
+  "content": "Hello, this is a new card111!",
   "bgColor": "#FFFFFF"
 }
 
@@ -14,4 +15,26 @@ Content-Type: application/json
 
 {
   "userId": "tank3a@gmail.com"
+}
+
+### Get Card List
+GET {{BaseUrl}}/api/v1/card/get?date=2025-07-27&userId=tank3a@naver.com
+
+### Add Emoji to Card
+POST {{BaseUrl}}/api/v1/card/emoji/add
+Content-Type: application/json
+
+{
+  "userId": "{{UserId}}",
+  "cardId": "{{CardId}}",
+  "emojiId": "{{EmojiId}}"
+}
+
+### Delete Emoji to Card
+DELETE {{BaseUrl}}/api/v1/card/emoji/delete
+Content-Type: application/json
+
+{
+  "userId": "{{UserId}}",
+  "cardId": "{{CardId}}"
 }
