@@ -61,7 +61,6 @@ class CardEmojiDeleteApiIntegrationTest {
 	void deleteEmoji_whenEmojiRecordExists_success() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("user123")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -96,7 +95,6 @@ class CardEmojiDeleteApiIntegrationTest {
 	void deleteEmoji_whenCardNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -118,7 +116,6 @@ class CardEmojiDeleteApiIntegrationTest {
 	void deleteEmoji_whenEmojiRecordNotExists_logsAndNoChange(CapturedOutput output) throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();

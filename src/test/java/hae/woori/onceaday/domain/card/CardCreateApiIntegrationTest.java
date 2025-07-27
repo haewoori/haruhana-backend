@@ -53,7 +53,6 @@ class CardCreateApiIntegrationTest {
 	void createCard_whenUserExists_success() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.nickname("test123")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(1)
@@ -109,7 +108,6 @@ class CardCreateApiIntegrationTest {
 	void createCard_whenBgColorInvalid_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -135,7 +133,6 @@ class CardCreateApiIntegrationTest {
 	void createCard_whenContentTooLong_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();

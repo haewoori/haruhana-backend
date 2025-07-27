@@ -58,7 +58,6 @@ class CardEmojiAddApiIntegrationTest {
 	void addEmoji_whenFirstTime_success() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -89,7 +88,6 @@ class CardEmojiAddApiIntegrationTest {
 	void addEmoji_whenAlreadyExists_replacesEmoji() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -128,7 +126,6 @@ class CardEmojiAddApiIntegrationTest {
 	void addEmoji_whenCardNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -152,7 +149,6 @@ class CardEmojiAddApiIntegrationTest {
 	void addEmoji_whenEmojiNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();

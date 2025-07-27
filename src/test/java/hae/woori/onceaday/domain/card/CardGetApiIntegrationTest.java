@@ -59,13 +59,11 @@ class CardGetApiIntegrationTest {
     void getCard_whenUserAndOtherCardsExist_success() throws Exception {
         UserDocument user1 = UserDocument.builder()
                 .email("tank3a@gmail.com")
-                .name("홍길동")
                 .gender(0)
                 .build();
         user1 = userDocumentRepository.save(user1);
         UserDocument user2 = UserDocument.builder()
                 .email("tank4a@gmail.com")
-                .name("임꺽정")
                 .gender(1)
                 .build();
         user2 = userDocumentRepository.save(user2);
@@ -110,13 +108,11 @@ class CardGetApiIntegrationTest {
     void getCard_whenOnlyOtherCardsExist_success() throws Exception {
         UserDocument user1 = UserDocument.builder()
                 .email("tank3a@gmail.com")
-                .name("홍길동")
                 .gender(0)
                 .build();
         user1 = userDocumentRepository.save(user1);
         UserDocument user2 = UserDocument.builder()
                 .email("tank4a@gmail.com")
-                .name("임꺽정")
                 .gender(1)
                 .build();
         user2 = userDocumentRepository.save(user2);
@@ -149,7 +145,6 @@ class CardGetApiIntegrationTest {
     void getCard_whenNoCardsExist_success() throws Exception {
         UserDocument user1 = UserDocument.builder()
                 .email("tank3a@gmail.com")
-                .name("홍길동")
                 .gender(0)
                 .build();
         user1 = userDocumentRepository.save(user1);
@@ -173,7 +168,6 @@ class CardGetApiIntegrationTest {
     void getCard_whenDateFormatInvalid_fail() throws Exception {
         UserDocument user1 = UserDocument.builder()
                 .email("tank3a@gmail.com")
-                .name("홍길동")
                 .gender(0)
                 .build();
         user1 = userDocumentRepository.save(user1);

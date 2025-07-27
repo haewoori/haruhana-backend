@@ -44,7 +44,6 @@ class CardDeleteApiIntegrationTest {
 	void deleteCard_whenUserAndCardExists_success() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -67,7 +66,6 @@ class CardDeleteApiIntegrationTest {
 	void deleteCard_whenCardIdNotExists_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();
@@ -86,7 +84,6 @@ class CardDeleteApiIntegrationTest {
 	void deleteCard_whenUserIdMismatch_fail() throws Exception {
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("홍길동")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
 			.build();

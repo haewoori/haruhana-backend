@@ -24,6 +24,6 @@ public class UserGateway {
 			return new UserProfileVo(null, "default_image");
 		}
 
-		return new UserProfileVo(document.getName(), document.getImageUrl());
+		return new UserProfileVo(document.getNickname(), document.getImageUrl());
 	}
 }
