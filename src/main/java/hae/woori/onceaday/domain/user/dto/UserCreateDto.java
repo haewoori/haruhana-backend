@@ -7,9 +7,8 @@ public class UserCreateDto {
 	@Schema(name = "UserCreateDto.Request")
 	public record Request(
 		@NotNull String email,
-		@NotNull String name,
-		String imageUrl,
-		String nickname,
+		@NotNull String imageUrl,
+		@NotNull String nickname,
 		Integer gender
 	) {
 	}

@@ -13,7 +13,6 @@ public interface UserMapper {
 	UserDocument createRequestToUserDocument(UserCreateDto.Request request);
 
 	@Mapping(target = "email", source = "kakaoUserVo.email")
-	@Mapping(target = "name", source = "kakaoUserVo.name")
 	@Mapping(target = "nickname", source = "kakaoUserVo.profile.nickname")
 	@Mapping(target = "imageUrl", source = "kakaoUserVo.profile.profileImageUrl")
 	UserDocument kakaoUserVoToUserDocument(KakaoUserVo kakaoUserVo);

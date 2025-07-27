@@ -41,14 +41,13 @@ class UserCreateApiIntegrationTest {
 	@Test
 	@DisplayName("사용자 정상 생성")
 	void createUser_success() throws Exception {
-		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "http://example.com/image.jpg", "탱크3세", 0);
+		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "http://example.com/image.jpg", "탱크3세", 0);
 
 		ResultActions result = mockMvc.perform(post("/api/v1/user/create").contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 
 		UserDocument expected = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("김종원")
 			.nickname("탱크3세")
 			.imageUrl("http://example.com/image.jpg")
 			.gender(0)
@@ -66,14 +65,13 @@ class UserCreateApiIntegrationTest {
 		// 먼저 사용자 생성
 		UserDocument user = UserDocument.builder()
 			.email("tank3a@gmail.com")
-			.name("김종원")
 			.imageUrl("http://example.com/image.jpg")
 			.nickname("탱크3세")
 			.gender(0)
 			.build();
 		userDocumentRepository.save(user);
 
-		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "김종원", "http://example.com/image.jpg", "탱크3세", 0);
+		UserCreateDto.Request request = new UserCreateDto.Request("tank3a@gmail.com", "http://example.com/image.jpg", "탱크3세", 0);
 
 		ResultActions result = mockMvc.perform(post("/api/v1/user/create").contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));

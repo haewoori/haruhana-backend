@@ -24,8 +24,6 @@ public class UserDocument {
 	@Indexed(unique = true)
 	private String email;
 	@NotNull
-	@Field(value = "name")
-	private String name;
 	@Field(value = "nickname")
 	private String nickname;
 	@NotNull
