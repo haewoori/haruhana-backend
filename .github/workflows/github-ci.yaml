@@ -97,6 +97,4 @@ jobs:
             
             # 새 jar 실행
             nohup java -Dspring.profiles.active=prd -jar ~/app.jar > app.log 2>&1 &
-
-            rm -f .env.properties
           EOF
