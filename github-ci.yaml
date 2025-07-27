@@ -1,0 +1,63 @@
+name: Build and Deploy
+
+env:
+  S3_BUCKET_NAME: "haruhana-backend-jar"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Git Checkout
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # 2. Set up Java 21
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # 3. Gradlew 실행 권한 부여
+      - name: Grant Execute Permission
+        run: chmod +x ./gradlew
+
+      # 4. JWT_SECRET_KEY를 포함한 .env 파일 생성
+      - name: Generate .env file
+        run: |
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+          echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
+          echo "MONGO_PRD_URL=${{ secrets.MONGO_PRD_URL }}" >> .env
+          echo "SERVER_OAUTH_REDIRECT_URI_PRD=${{ secrets.SERVER_OAUTH_REDIRECT_URI_PRD }}" >> .env
+          echo "CLIENT_OAUTH_REDIRECT_URI_PRD=${{ secrets.CLIENT_OAUTH_REDIRECT_URI_PRD }}" >> .env
+
+      # 5. Gradle 빌드 (.env 반영하여 환경변수로 실행)
+      - name: Build with Gradle
+        run: |
+          export $(cat .env | xargs)  # 환경변수 주입
+          ./gradlew build -x test --no-daemon
+
+      # 6. 빌드된 jar에 타임스탬프 붙이기
+      - name: Copy Jar with Timestamp
+        id: jar
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+          JAR_FILE=$(ls ./build/libs/*.jar | head -n 1)
+          TARGET_NAME="app-$TIMESTAMP.jar"
+          cp "$JAR_FILE" "$TARGET_NAME"
+          echo "jar_name=$TARGET_NAME" >> "$GITHUB_OUTPUT"
+
+      # 7. AWS 인증 설정
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      # 8. S3에 업로드
+      - name: Upload to S3
+        run: |
+          aws s3 cp ${{ steps.jar.outputs.jar_name }} s3://$S3_BUCKET_NAME/
