@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +69,7 @@ class CardGetApiIntegrationTest {
                 .build();
         user2 = userDocumentRepository.save(user2);
 		EmojiDocument emojiDocument = EmojiDocument.builder()
-			.emojiUrl("http://example.com/emoji.png")
+			.emoji("http://example.com/emoji.png")
 			.build();
 		emojiDocument = emojiDocumentRepository.save(emojiDocument);
         LocalDate date = LocalDate.of(2025, 7, 27);
@@ -77,7 +78,7 @@ class CardGetApiIntegrationTest {
                 .content("내 카드")
                 .bgColor("#FFAA00")
                 .createTime(date.atStartOfDay())
-				.emojiRecords(List.of(new EmojiRecord(emojiDocument.getId(), emojiDocument.getEmojiUrl(), "user123")))
+				.emojiRecords(List.of(new EmojiRecord(emojiDocument.getId(), emojiDocument.getEmoji(), user1.getId())))
                 .build();
         CardDocument card2 = CardDocument.builder()
                 .userId(user2.getId())
@@ -89,8 +90,7 @@ class CardGetApiIntegrationTest {
         String accessToken = accessTokenGenerator.generateAccessToken(user1.getId());
 
         ResultActions result = mockMvc.perform(get("/api/v1/card/get")
-                .param("date", "2025-07-27")
-                .param("userId", "user123")
+                .param("date", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
 
@@ -127,8 +127,7 @@ class CardGetApiIntegrationTest {
         String accessToken = accessTokenGenerator.generateAccessToken(user1.getId());
 
         ResultActions result = mockMvc.perform(get("/api/v1/card/get")
-                .param("date", "2025-07-27")
-                .param("userId", "user123")
+                .param("date", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON));
 

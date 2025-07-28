@@ -13,5 +13,5 @@ public class EmojiDocument {
 
 	@Id
 	private String id;
-	private String emojiUrl;
+	private String emoji;
 }
