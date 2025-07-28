@@ -4,7 +4,6 @@ Content-Type: application/json
 Authorization: Bearer {{AccessToken}}
 
 {
-  "userId": "tank3a@naver.com",
   "content": "Hello, this is a new card111!",
   "bgColor": "#FFFFFF"
 }
@@ -15,7 +14,7 @@ Content-Type: application/json
 Authorization: Bearer {{AccessToken}}
 
 ### Get Card List
-GET {{BaseUrl}}/api/v1/card/get?date=2025-07-27&userId=tank3a@naver.com
+GET {{BaseUrl}}/api/v1/card/get?date=2025-07-27
 Authorization: Bearer {{AccessToken}}
 
 ### Add Emoji to Card

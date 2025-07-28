@@ -33,7 +33,7 @@ public class CardSearchService implements SimpleService<MyCardSearchDto.Request,
 		//TODO: Aggregation으로 추후에 리팩토링 필요
 		List<CardVo> myCards = myCardDocumentList.stream().map(document -> {
 			UserProfileVo userProfile = userGateway.getUserProfileById(document.getUserId());
-			return cardMapper.cardDocumentsToCardVo(document, userProfile);
+			return cardMapper.cardDocumentsToCardVo(document, userProfile, input.userId());
 		}).toList();
 
 		List<CardDocument> otherCardDocumentList = cardDocumentList.stream()
@@ -41,7 +41,7 @@ public class CardSearchService implements SimpleService<MyCardSearchDto.Request,
 			.toList();
 		List<CardVo> otherCards = otherCardDocumentList.stream().map(document -> {
 			UserProfileVo userProfile = userGateway.getUserProfileById(document.getUserId());
-			return cardMapper.cardDocumentsToCardVo(document, userProfile);
+			return cardMapper.cardDocumentsToCardVo(document, userProfile, input.userId());
 		}).toList();
 		// Implement the logic to search for cardDocumentList here
 		return new MyCardSearchDto.Response(myCards, otherCards);
