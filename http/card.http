@@ -36,3 +36,15 @@ Authorization: Bearer {{AccessToken}}
 {
   "cardId": "{{CardId}}"
 }
+
+### Add Emoji Data
+POST {{BaseUrl}}/api/v1/card/emoji/data/add
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "emoji": "😁"
+}
+
+### Get Emoji Data
+GET {{BaseUrl}}/api/v1/card/emoji/data/list

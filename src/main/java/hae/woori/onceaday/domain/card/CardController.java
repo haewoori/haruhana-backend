@@ -3,12 +3,16 @@ package hae.woori.onceaday.domain.card;
 import java.time.LocalDate;
 
 import hae.woori.onceaday.domain.card.dto.EmojiAddDto;
+import hae.woori.onceaday.domain.card.dto.EmojiDataAddDto;
 import hae.woori.onceaday.domain.card.dto.EmojiDeleteDto;
+import hae.woori.onceaday.domain.card.dto.EmojiListGetDto;
 import hae.woori.onceaday.domain.card.dto.MyCardDeleteDto;
 import hae.woori.onceaday.domain.card.dto.MyCardSearchDto;
 import hae.woori.onceaday.domain.card.service.CardSearchService;
 import hae.woori.onceaday.domain.card.service.EmojiAddService;
+import hae.woori.onceaday.domain.card.service.EmojiDataAddService;
 import hae.woori.onceaday.domain.card.service.EmojiDeleteService;
+import hae.woori.onceaday.domain.card.service.EmojiListGetService;
 import hae.woori.onceaday.domain.card.service.MyCardCreateService;
 import hae.woori.onceaday.domain.card.dto.MyCardCreateDto;
 import hae.woori.onceaday.domain.card.service.MyCardDeleteService;
@@ -35,6 +39,8 @@ public class CardController {
 	private final MyCardDeleteService myCardDeleteService;
 	private final EmojiAddService emojiAddService;
 	private final EmojiDeleteService emojiDeleteService;
+	private final EmojiListGetService emojiListGetService;
+	private final EmojiDataAddService emojiDataAddService;
 
 	@GetMapping("/get")
 	@Operation(description = "특정 날짜에 해당하는 내 카드와 다른 사람 카드 리스트를 조회합니다.",
@@ -66,6 +72,16 @@ public class CardController {
 	public MyCardDeleteDto.Response delete(@PathVariable String cardId, Authentication authentication) {
 		String userId = (String) authentication.getPrincipal();
 		return myCardDeleteService.run(MyCardDeleteDto.requestWrapperFrom(userId, cardId));
+	}
+
+	@GetMapping("/emoji/data/list")
+	public EmojiListGetDto.Response emojiList() {
+		return emojiListGetService.run(new EmojiListGetDto.Request());
+	}
+
+	@PostMapping("/emoji/data/add")
+	public EmojiDataAddDto.Response emojiDataAdd(@RequestBody EmojiDataAddDto.Request request, Authentication authentication) {
+		return emojiDataAddService.run(request);
 	}
 
 	@PostMapping("/emoji/add")
