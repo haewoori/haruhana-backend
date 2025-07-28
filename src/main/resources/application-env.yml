@@ -23,6 +23,10 @@ jwt:
       #7d
       refresh-token: 604800000
 
+security:
+  allowed-origins:
+    - http://localhost:3000
+
 ---
 spring:
   config:
@@ -47,3 +51,8 @@ jwt:
     access-token: 3600000
     #7d
     refresh-token: 604800000
+
+security:
+  allowed-origins:
+    - https://www.haruhana.store
+    - https://haruhana-frontend-chi.vercel.app
