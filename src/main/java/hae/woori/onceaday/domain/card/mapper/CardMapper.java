@@ -2,12 +2,18 @@ package hae.woori.onceaday.domain.card.mapper;
 
 import java.util.List;
 
+import hae.woori.onceaday.domain.card.dto.EmojiRecordDto;
 import hae.woori.onceaday.domain.card.dto.MyCardCreateDto;
 import hae.woori.onceaday.domain.card.vo.CardVo;
 import hae.woori.onceaday.domain.card.vo.UserProfileVo;
 import hae.woori.onceaday.persistence.document.CardDocument;
+import hae.woori.onceaday.persistence.vo.EmojiRecord;
+
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CardMapper {
@@ -18,5 +24,14 @@ public interface CardMapper {
 
     @Mapping(target = "cardId", source = "cardDocument.id")
     @Mapping(target = "createdAt", source = "cardDocument.createTime")
-    CardVo cardDocumentsToCardVo(CardDocument cardDocument, UserProfileVo userProfile);
+    CardVo cardDocumentsToCardVo(CardDocument cardDocument, UserProfileVo userProfile, @Context String userId);
+
+    List<EmojiRecordDto> emojiRecordListToEmojiRecordDtoList(List<EmojiRecord> emojiRecord, @Context String userId);
+
+    @Mapping(target = "isMine", expression = "java(isMine(emojiRecord, userId))")
+    EmojiRecordDto emojiRecordToEmojiRecordDto(EmojiRecord emojiRecord, @Context String userId);
+
+    default boolean isMine(EmojiRecord record, String userId) {
+        return record.userId().equals(userId);
+    }
 }
