@@ -32,7 +32,7 @@ public class EmojiAddService implements SimpleService<EmojiAddDto.RequestWrapper
 		EmojiDocument emojiDocument = emojiDocumentRepository.findById(request.emojiId())
 			.orElseThrow(() -> new ClientSideException("Emoji does not exist with emojiId: " + request.emojiId()));
 
-		EmojiRecord recordToAdd = new EmojiRecord(request.emojiId(), emojiDocument.getEmojiUrl(), request.userId());
+		EmojiRecord recordToAdd = new EmojiRecord(request.emojiId(), emojiDocument.getEmoji(), request.userId());
 		cardDocument.getEmojiRecords()
 			.stream()
 			.filter(emojiRecord -> emojiRecord.userId().equals(request.userId()))

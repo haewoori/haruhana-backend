@@ -25,6 +25,7 @@ public class SecurityConfig {
 				.requestMatchers("/api/v1/user/create").permitAll()
 				.requestMatchers("/api/v1/notifications/add").denyAll()
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+				.requestMatchers("/api/v1/card/emoji/data/list").permitAll()
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

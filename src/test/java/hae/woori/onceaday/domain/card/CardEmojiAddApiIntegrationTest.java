@@ -65,7 +65,7 @@ class CardEmojiAddApiIntegrationTest {
 		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 		CardDocument card = CardDocument.builder().userId(user.getId()).content("카드 내용").bgColor("#FFAA00").build();
 		card = cardDocumentRepository.save(card);
-		EmojiDocument emoji = EmojiDocument.builder().emojiUrl("url1").build();
+		EmojiDocument emoji = EmojiDocument.builder().emoji("url1").build();
 		emoji = emojiDocumentRepository.save(emoji);
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request(card.getId(), emoji.getId());
@@ -79,7 +79,7 @@ class CardEmojiAddApiIntegrationTest {
 		assertThat(updated.getEmojiRecords()).hasSize(1);
 		EmojiRecord record = updated.getEmojiRecords().getFirst();
 
-		EmojiRecord expected = new EmojiRecord(emoji.getId(), emoji.getEmojiUrl(), user.getId());
+		EmojiRecord expected = new EmojiRecord(emoji.getId(), emoji.getEmoji(), user.getId());
 		assertThat(record).usingRecursiveComparison().isEqualTo(expected);
 	}
 
@@ -94,16 +94,16 @@ class CardEmojiAddApiIntegrationTest {
 		user = userDocumentRepository.save(user);
 		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 
-		EmojiDocument oldEmoji = EmojiDocument.builder().emojiUrl("oldUrl").build();
+		EmojiDocument oldEmoji = EmojiDocument.builder().emoji("oldUrl").build();
 		oldEmoji = emojiDocumentRepository.save(oldEmoji);
 		CardDocument card = CardDocument.builder()
 			.userId(user.getId())
 			.content("카드 내용")
 			.bgColor("#FFAA00")
-			.emojiRecords(List.of(new EmojiRecord(oldEmoji.getId(), oldEmoji.getEmojiUrl(), user.getId())))
+			.emojiRecords(List.of(new EmojiRecord(oldEmoji.getId(), oldEmoji.getEmoji(), user.getId())))
 			.build();
 		card = cardDocumentRepository.save(card);
-		EmojiDocument newEmoji = EmojiDocument.builder().emojiUrl("newUrl").build();
+		EmojiDocument newEmoji = EmojiDocument.builder().emoji("newUrl").build();
 		newEmoji = emojiDocumentRepository.save(newEmoji);
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request(card.getId(), newEmoji.getId());
@@ -117,7 +117,7 @@ class CardEmojiAddApiIntegrationTest {
 		assertThat(updated.getEmojiRecords()).hasSize(1);
 		EmojiRecord record = updated.getEmojiRecords().getFirst();
 
-		EmojiRecord expected = new EmojiRecord(newEmoji.getId(), newEmoji.getEmojiUrl(), user.getId());
+		EmojiRecord expected = new EmojiRecord(newEmoji.getId(), newEmoji.getEmoji(), user.getId());
 		assertThat(record).usingRecursiveComparison().isEqualTo(expected);
 	}
 
@@ -131,7 +131,7 @@ class CardEmojiAddApiIntegrationTest {
 			.build();
 		user = userDocumentRepository.save(user);
 		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
-		EmojiDocument emoji = EmojiDocument.builder().id("emoji1").emojiUrl("url1").build();
+		EmojiDocument emoji = EmojiDocument.builder().id("emoji1").emoji("url1").build();
 		emojiDocumentRepository.save(emoji);
 
 		EmojiAddDto.Request request = new EmojiAddDto.Request("notExistCardId", "emoji1");
@@ -174,7 +174,7 @@ class CardEmojiAddApiIntegrationTest {
 	void addEmoji_whenUserNotExists_fail() throws Exception {
 		CardDocument card = CardDocument.builder().userId("user123").content("카드 내용").bgColor("#FFAA00").build();
 		card = cardDocumentRepository.save(card);
-		EmojiDocument emoji = EmojiDocument.builder().id("emoji1").emojiUrl("url1").build();
+		EmojiDocument emoji = EmojiDocument.builder().id("emoji1").emoji("url1").build();
 		emojiDocumentRepository.save(emoji);
 		String accessToken = accessTokenGenerator.generateAccessToken("invalid_user_id");
 

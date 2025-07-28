@@ -67,7 +67,7 @@ class CardEmojiDeleteApiIntegrationTest {
 		user = userDocumentRepository.save(user);
 		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 		EmojiDocument emojiDocument = EmojiDocument.builder()
-			.emojiUrl("url1")
+			.emoji("url1")
 			.build();
 		emojiDocument = emojiDocumentRepository.save(emojiDocument);
 		EmojiRecord emojiRecord = new EmojiRecord(emojiDocument.getId(), "url1", user.getId());
@@ -123,7 +123,7 @@ class CardEmojiDeleteApiIntegrationTest {
 		String accessToken = accessTokenGenerator.generateAccessToken(user.getId());
 
 		EmojiDocument emojiDocument = EmojiDocument.builder()
-			.emojiUrl("url1")
+			.emoji("url1")
 			.build();
 		emojiDocument = emojiDocumentRepository.save(emojiDocument);
 		CardDocument card = CardDocument.builder()
