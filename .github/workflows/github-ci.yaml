@@ -101,6 +101,6 @@ jobs:
           echo "SERVER_OAUTH_REDIRECT_URI_PRD=${{ secrets.SERVER_OAUTH_REDIRECT_URI_PRD }}" >> .env.properties
           echo "CLIENT_OAUTH_REDIRECT_URI_PRD=${{ secrets.CLIENT_OAUTH_REDIRECT_URI_PRD }}" >> .env.properties
           
-          nohup java -Dspring.profiles.active=prd -jar ~/app.jar > app.log 2>&1 &
+          nohup java -Dspring.profiles.active=prd -Duser.timezone=Asia/Seoul -jar ~/app.jar > app.log 2>&1 &
           echo $! > app.pid
           EOF
