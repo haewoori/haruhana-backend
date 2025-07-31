@@ -80,7 +80,7 @@ jobs:
       # 10. Deploy to EC2
       - name: Deploy to EC2 via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no -i haru-hana-key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i haru-hana-key.pem ubuntu@${{ secrets.EC2_HOST }} << EOF
           cd ~
           
           PID=$(pgrep -f 'java.*app.jar')
@@ -93,12 +93,13 @@ jobs:
           aws s3 cp s3://$S3_BUCKET_NAME/onceaday-0.0.1-SNAPSHOT.jar app.jar
           
           rm -f .env.properties
-          echo "JWT_SECRET_KEY=***" >> .env.properties
-          echo "KAKAO_CLIENT_ID=***" >> .env.properties
-          echo "KAKAO_CLIENT_SECRET=***" >> .env.properties
-          echo "MONGO_PRD_URL=***" >> .env.properties
-          echo "SERVER_OAUTH_REDIRECT_URI_PRD=***" >> .env.properties
-          echo "CLIENT_OAUTH_REDIRECT_URI_PRD=***" >> .env.properties
+          
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env.properties
+          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env.properties
+          echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env.properties
+          echo "MONGO_PRD_URL=${{ secrets.MONGO_PRD_URL }}" >> .env.properties
+          echo "SERVER_OAUTH_REDIRECT_URI_PRD=${{ secrets.SERVER_OAUTH_REDIRECT_URI_PRD }}" >> .env.properties
+          echo "CLIENT_OAUTH_REDIRECT_URI_PRD=${{ secrets.CLIENT_OAUTH_REDIRECT_URI_PRD }}" >> .env.properties
           
           nohup java -Dspring.profiles.active=prd -jar ~/app.jar > app.log 2>&1 &
           echo $! > app.pid
