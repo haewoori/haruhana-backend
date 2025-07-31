@@ -82,21 +82,24 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i haru-hana-key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
           cd ~
+          
           PID=$(pgrep -f 'java.*app.jar')
           if [ -n "$PID" ]; then
               echo "Killing existing process $PID"
               kill -9 $PID
               sleep 2
           fi
+          
           aws s3 cp s3://$S3_BUCKET_NAME/onceaday-0.0.1-SNAPSHOT.jar app.jar
-          cat <<EOT > .env.properties
-          JWT_SECRET_KEY=${JWT_SECRET_KEY}
-          KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
-          KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET}
-          MONGO_PRD_URL=${MONGO_PRD_URL}
-          SERVER_OAUTH_REDIRECT_URI_PRD=${SERVER_OAUTH_REDIRECT_URI_PRD}
-          CLIENT_OAUTH_REDIRECT_URI_PRD=${CLIENT_OAUTH_REDIRECT_URI_PRD}
-          EOT
+          
+          rm -f .env.properties
+          echo "JWT_SECRET_KEY=***" >> .env.properties
+          echo "KAKAO_CLIENT_ID=***" >> .env.properties
+          echo "KAKAO_CLIENT_SECRET=***" >> .env.properties
+          echo "MONGO_PRD_URL=***" >> .env.properties
+          echo "SERVER_OAUTH_REDIRECT_URI_PRD=***" >> .env.properties
+          echo "CLIENT_OAUTH_REDIRECT_URI_PRD=***" >> .env.properties
+          
           nohup java -Dspring.profiles.active=prd -jar ~/app.jar > app.log 2>&1 &
           echo $! > app.pid
           EOF
