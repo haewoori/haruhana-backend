@@ -10,6 +10,7 @@ import hae.woori.onceaday.persistence.vo.StudyCategory;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -35,7 +36,7 @@ public class StudyCardDocument {
 	private LocalDateTime updatedTime;
 
 	@Field("due_date")
-	private String dueDate;
+	private LocalDate dueDate;
 	@Field("category")
 	private StudyCategory category;
 	//true면 온라인 스터디, false면 오프라인 스터디
