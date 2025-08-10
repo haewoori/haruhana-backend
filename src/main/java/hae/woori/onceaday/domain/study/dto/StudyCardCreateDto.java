@@ -2,7 +2,6 @@ package hae.woori.onceaday.domain.study.dto;
 
 import hae.woori.onceaday.persistence.vo.StudyCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
 
 public class StudyCardCreateDto {
     @Schema(name = "StudyCardCreateDto.Request")
@@ -18,7 +17,6 @@ public class StudyCardCreateDto {
     public record RequestWrapper(
         String title,
         String content,
-        String createdTime,
         String dueDate,
         StudyCategory category,
         boolean isOnline,
@@ -30,7 +28,6 @@ public class StudyCardCreateDto {
         return new RequestWrapper(
             request.title(),
             request.content(),
-            LocalDate.now().toString(),
             request.dueDate(),
             request.category(),
             request.isOnline(),
