@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record CardVo(
 	String cardId,
 	String content,
-	UserProfileVo userProfile,
+	CardUserProfileVo userProfile,
 	List<EmojiRecordDto> emojiRecords,
 	String bgColor,
 	String createdAt
