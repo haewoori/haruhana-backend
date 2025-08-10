@@ -46,4 +46,7 @@ public class StudyCardDocument {
 	@Field("is_public")
 	private boolean isPublic;
 
+	public void updatePublicStatus(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
 }

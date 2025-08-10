@@ -1,0 +1,16 @@
+### Create Study Card
+POST {{BaseUrl}}/api/v1/study/create
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+  "title": "This is Title",
+  "dueDate": "2025-08-20",
+  "content": "Detailed content of the study card",
+  "category": "CERTIFICATE",
+  "isOnline": true
+}
+
+### Delete Study Card
+DELETE {{BaseUrl}}/api/v1/study/delete/{{StudyCardId}}
+Authorization: Bearer {{AccessToken}}

@@ -1,13 +1,17 @@
 package hae.woori.onceaday.domain.study;
 
 import hae.woori.onceaday.domain.study.dto.StudyCardCreateDto;
+import hae.woori.onceaday.domain.study.dto.StudyCardDeleteDto;
 import hae.woori.onceaday.domain.study.service.StudyCardCreateService;
+import hae.woori.onceaday.domain.study.service.StudyCardDeleteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StudyController {
     private final StudyCardCreateService studyCardCreateService;
+    private final StudyCardDeleteService studyCardDeleteService;
 
     @PostMapping("/create")
     @Operation(description = "스터디 카드를 생성합니다. 요청 본문에 UserID와 신청 정보를 포함해야 합니다.",
@@ -46,7 +51,12 @@ public class StudyController {
 
 	//TODO: 2. 스터디 카드 조회 기능. 페이지네이션 이용
 
-	//TODO: 3. 카드 삭제 기능
+    @DeleteMapping("/delete/{cardId}")
+    public StudyCardDeleteDto.Response delete(@PathVariable String cardId, Authentication authentication) {
+        String userId = (String) authentication.getPrincipal();
+        log.info("User ID {} deleting study card with ID: {}", userId, cardId);
+        return studyCardDeleteService.run(StudyCardDeleteDto.toRequestWrapper(cardId, userId));
+    }
 
 	//TODO: 4. 스터디 신청 기능
 
