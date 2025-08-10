@@ -2,7 +2,7 @@ package hae.woori.onceaday.domain.card.service;
 
 import hae.woori.onceaday.domain.SimpleService;
 import hae.woori.onceaday.domain.card.dto.EmojiAddDto;
-import hae.woori.onceaday.domain.card.external.UserGateway;
+import hae.woori.onceaday.domain.card.external.CardUserGateway;
 import hae.woori.onceaday.exception.ClientSideException;
 import hae.woori.onceaday.persistence.document.CardDocument;
 import hae.woori.onceaday.persistence.document.EmojiDocument;
@@ -19,13 +19,13 @@ public class EmojiAddService implements SimpleService<EmojiAddDto.RequestWrapper
 
 	private final CardDocumentRepository cardDocumentRepository;
 	private final EmojiDocumentRepository emojiDocumentRepository;
-	private final UserGateway userGateway;
+	private final CardUserGateway cardUserGateway;
 
 	@Override
 	public EmojiAddDto.Response run(EmojiAddDto.RequestWrapper request) {
 		CardDocument cardDocument = cardDocumentRepository.findById(request.cardId())
 			.orElseThrow(() -> new ClientSideException("Card not found with id: " + request.cardId()));
-		if (!userGateway.checkUserExistsById(request.userId())) {
+		if (!cardUserGateway.checkUserExistsById(request.userId())) {
 			throw new ClientSideException("User does not exist with userId: " + request.userId());
 		}
 
