@@ -79,11 +79,13 @@ public class CardController {
 		return emojiListGetService.run(new EmojiListGetDto.Request());
 	}
 
+	@Operation(description = "이모지 데이터를 추가합니다.")
 	@PostMapping("/emoji/data/add")
 	public EmojiDataAddDto.Response emojiDataAdd(@RequestBody EmojiDataAddDto.Request request, Authentication authentication) {
 		return emojiDataAddService.run(request);
 	}
 
+	@Operation(description = "카드에 이모지를 추가합니다.")
 	@PostMapping("/emoji/add")
 	public EmojiAddDto.Response addEmoji(@Valid @RequestBody EmojiAddDto.Request request, Authentication authentication) {
 		String userId = (String) authentication.getPrincipal();
