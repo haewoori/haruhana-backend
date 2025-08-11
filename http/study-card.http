@@ -14,3 +14,7 @@ Content-Type: application/json
 ### Delete Study Card
 DELETE {{BaseUrl}}/api/v1/study/delete/{{StudyCardId}}
 Authorization: Bearer {{AccessToken}}
+
+### Get Study Card List
+GET {{BaseUrl}}/api/v1/study/list?available=false&page=0&size=3
+Authorization: Bearer {{AccessToken}}

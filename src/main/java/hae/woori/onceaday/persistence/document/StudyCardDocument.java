@@ -3,6 +3,7 @@ package hae.woori.onceaday.persistence.document;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @Document(collection = "study_cards")
+@CompoundIndex(name = "idx_is_public_available", def = "{'is_public': 1, 'is_available': 1}")
 public class StudyCardDocument {
 
 	@Id
@@ -26,7 +28,6 @@ public class StudyCardDocument {
 	private String content;
 	@Field("user_id")
 	private String userId;
-
 	@CreatedDate
 	@Field("created_time")
 	private LocalDateTime createdTime;
@@ -45,6 +46,8 @@ public class StudyCardDocument {
 	//true면 모집중/모집완료. false면 삭제 등으로 비공개
 	@Field("is_public")
 	private boolean isPublic;
+	@Field("is_available")
+	private boolean isAvailable;
 
 	public void updatePublicStatus(boolean isPublic) {
 		this.isPublic = isPublic;
