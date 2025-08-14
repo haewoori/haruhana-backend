@@ -6,6 +6,7 @@ import hae.woori.onceaday.domain.study.dto.StudyCardListDto;
 import hae.woori.onceaday.domain.study.service.StudyCardCreateService;
 import hae.woori.onceaday.domain.study.service.StudyCardDeleteService;
 import hae.woori.onceaday.domain.study.service.StudyCardListService;
+import hae.woori.onceaday.domain.study.vo.AvailabilityFilter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,7 +61,7 @@ public class StudyController {
     @Operation(description = "스터디 카드 목록을 조회합니다. 페이지네이션 기반으로 동작합니다. 모집중인 스터디가 상단에 최신순으로 보입니다.")
     @GetMapping("/list")
     public StudyCardListDto.Response getList(
-        @RequestParam(name = "available", defaultValue = "false") boolean isAvailable,
+        @RequestParam(name = "available", defaultValue = "ANY") AvailabilityFilter isAvailable,
         @Schema(description = "page만 처리 가능") @PageableDefault(size = 1) Pageable pageable,
         Authentication authentication) {
         String userId = (String) authentication.getPrincipal();

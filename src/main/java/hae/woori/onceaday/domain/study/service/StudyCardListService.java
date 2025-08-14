@@ -8,6 +8,7 @@ import hae.woori.onceaday.domain.study.dto.StudyCardDto;
 import hae.woori.onceaday.domain.study.dto.StudyCardListDto;
 import hae.woori.onceaday.domain.study.external.StudyUserGateway;
 import hae.woori.onceaday.domain.study.mapper.StudyCardMapper;
+import hae.woori.onceaday.domain.study.vo.AvailabilityFilter;
 import hae.woori.onceaday.domain.study.vo.StudyUserProfileVo;
 import hae.woori.onceaday.persistence.dao.StudyCardDocumentDao;
 import hae.woori.onceaday.persistence.document.StudyCardDocument;
@@ -25,7 +26,9 @@ public class StudyCardListService implements SimpleService<StudyCardListDto.Requ
 
 	@Override
 	public StudyCardListDto.Response run(StudyCardListDto.RequestWrapper request) {
-		Page<StudyCardDocument> resultPage = studyCardDocumentDao.findAllCards(request.pageable(), request.isAvailable());
+		AvailabilityFilter availability = request.isAvailable();
+
+		Page<StudyCardDocument> resultPage = studyCardDocumentDao.findAllCards(request.pageable(), availability);
 
 		Page<StudyCardDto> mappedResult = resultPage.map(document -> {
 				StudyUserProfileVo userProfile = studyUserGateway.getUserProfileById(document.getUserId());
