@@ -21,7 +21,8 @@ public class StudyCardCreateDto {
         LocalDate dueDate,
         StudyCategory category,
         boolean isOnline,
-        String userId
+        String userId,
+        boolean isAvailable
     ) {}
 
     public static RequestWrapper toRequestWrapper(Request request, String userId) {
@@ -31,7 +32,8 @@ public class StudyCardCreateDto {
             request.dueDate(),
             request.category(),
             request.isOnline(),
-            userId
+            userId,
+            true
         );
     }
 
