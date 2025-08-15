@@ -17,13 +17,13 @@ public class StudyCardListDto {
 	}
 
 	public record RequestWrapper(
-		boolean isAvailable,
+		Boolean isAvailable,
 		Pageable pageable,
 		String userId
 	) {
 	}
 
-	public static RequestWrapper requestWrapperFrom(boolean isAvailable, Pageable pageable, String userId) {
+	public static RequestWrapper requestWrapperFrom(Boolean isAvailable, Pageable pageable, String userId) {
 		return new RequestWrapper(isAvailable, pageable, userId);
 	}
 }
