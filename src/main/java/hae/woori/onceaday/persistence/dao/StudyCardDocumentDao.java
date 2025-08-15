@@ -21,7 +21,7 @@ public class StudyCardDocumentDao {
 
 	private final MongoTemplate mongoTemplate;
 
-	public Page<StudyCardDocument> findAllCards(Pageable pageable, boolean available) {
+	public Page<StudyCardDocument> findAllCards(Pageable pageable, Boolean available) {
 		Pageable page = PageRequest.of(
 			pageable.getPageNumber(),
 			pageable.getPageSize(),
@@ -34,8 +34,13 @@ public class StudyCardDocumentDao {
 		Query query = new Query()
 			.addCriteria(Criteria.where("is_public").is(true));
 
-		if (available) {
-			query.addCriteria(Criteria.where("is_available").is(true));
+		if (available != null) {
+			if(available) {
+				query.addCriteria(Criteria.where("is_available").is(true));
+			}
+			else {
+				query.addCriteria(Criteria.where("is_available").is(false));
+			}
 		}
 
 		long total = mongoTemplate.count(query, StudyCardDocument.class);

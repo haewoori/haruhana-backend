@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
@@ -60,8 +61,9 @@ public class StudyController {
     @Operation(description = "스터디 카드 목록을 조회합니다. 페이지네이션 기반으로 동작합니다. 모집중인 스터디가 상단에 최신순으로 보입니다.")
     @GetMapping("/list")
     public StudyCardListDto.Response getList(
-        @RequestParam(name = "available", defaultValue = "false") boolean isAvailable,
-        @Schema(description = "page만 처리 가능") @PageableDefault(size = 1) Pageable pageable,
+        @Schema(description = "파라미터를 주지 않으면 전체 조회. true/false를 주면 모집중/모집완료만 확인 가능")
+        @Nullable @RequestParam(name = "available") Boolean isAvailable,
+        @Schema(description = "page만 처리 가능") @PageableDefault(size = 20) Pageable pageable,
         Authentication authentication) {
         String userId = (String) authentication.getPrincipal();
         log.info("User ID {} requesting study card list", userId);
