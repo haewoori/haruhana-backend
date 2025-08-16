@@ -2,6 +2,7 @@ package hae.woori.onceaday.domain.study.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.*;
 
 import hae.woori.onceaday.domain.study.vo.StudyUserProfileVo;
 import lombok.Builder;
@@ -21,4 +22,9 @@ public class StudyCardDto {
 	private boolean online;
 	private boolean available;
 	private boolean registered;
+	private boolean isMine;
+	List<String> participantIds;
+	List<String> participantNames;
+	boolean participated;
+
 }

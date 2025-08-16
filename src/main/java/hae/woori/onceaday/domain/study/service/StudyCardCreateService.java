@@ -25,6 +25,7 @@ public class StudyCardCreateService implements SimpleService<StudyCardCreateDto.
         }
 
         StudyCardDocument studyCardDocument = studyCardMapper.createRequestWrapperToStudyCardDocument(request);
+        studyCardDocument.getParticipantIds().add(request.userId());
         studyCardDocumentRepository.save(studyCardDocument);
         return new StudyCardCreateDto.Response();
     }
