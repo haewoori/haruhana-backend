@@ -16,6 +16,8 @@ public interface StudyCardMapper {
     StudyCardDocument createRequestWrapperToStudyCardDocument(StudyCardCreateDto.RequestWrapper request);
 
     @Mapping(target = "studyCardId", source = "studyCardDocument.id")
+    @Mapping(target = "isMine",
+            expression = "java(studyCardDocument.getUserId().equals(userId))")
     StudyCardDto studyCardDocumentToStudyCardDto(StudyCardDocument studyCardDocument, @Context String userId, @Context
         StudyUserProfileVo userProfile);
 

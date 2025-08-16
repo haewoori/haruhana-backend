@@ -21,4 +21,5 @@ public class StudyCardDto {
 	private boolean online;
 	private boolean available;
 	private boolean registered;
+	private boolean isMine;
 }
