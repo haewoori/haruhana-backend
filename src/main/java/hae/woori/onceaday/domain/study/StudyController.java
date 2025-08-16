@@ -1,11 +1,7 @@
 package hae.woori.onceaday.domain.study;
 
-import hae.woori.onceaday.domain.study.dto.StudyCardCreateDto;
-import hae.woori.onceaday.domain.study.dto.StudyCardDeleteDto;
-import hae.woori.onceaday.domain.study.dto.StudyCardListDto;
-import hae.woori.onceaday.domain.study.service.StudyCardCreateService;
-import hae.woori.onceaday.domain.study.service.StudyCardDeleteService;
-import hae.woori.onceaday.domain.study.service.StudyCardListService;
+import hae.woori.onceaday.domain.study.dto.*;
+import hae.woori.onceaday.domain.study.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,6 +31,8 @@ public class StudyController {
     private final StudyCardCreateService studyCardCreateService;
     private final StudyCardDeleteService studyCardDeleteService;
     private final StudyCardListService studyCardListService;
+    private final StudyCardApplyService studyCardApplyService;
+    private final StudyCardCancelService studyCardCancelService;
 
     @PostMapping("/create")
     @Operation(description = "스터디 카드를 생성합니다. 요청 본문에 UserID와 신청 정보를 포함해야 합니다.",
@@ -76,7 +74,28 @@ public class StudyController {
     }
 
 	//TODO: 4. 스터디 신청 기능
+    @PostMapping("/apply")
+    @Operation(description = "스터디에 신청(참가)합니다.")
+    public StudyCardApplyDto.Response apply(
+            @Valid @RequestBody StudyCardApplyDto.Request request,
+            Authentication authentication
+    ) {
+        String userId = (String) authentication.getPrincipal();
+        log.info("User {} apply card {}", userId, request.cardId());
+        return studyCardApplyService.run(StudyCardApplyDto.RequestWrapper.of(request, userId));
+    }
 
 	//TODO: 5. 스터디 신청 취소 기능
+    @PostMapping("/cancel")
+    @Operation(description = "스터디 신청(참가)을 취소합니다.")
+    public StudyCardCancelDto.Response cancel(
+            @Valid @RequestBody StudyCardCancelDto.Request request,
+            Authentication authentication
+    ) {
+        String userId = (String) authentication.getPrincipal();
+        log.info("User {} cancel card {}", userId, request.cardId());
+        return studyCardCancelService.run(StudyCardCancelDto.RequestWrapper.of(request, userId));
+    }
+
 
 }
