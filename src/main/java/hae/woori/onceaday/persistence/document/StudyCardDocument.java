@@ -26,6 +26,8 @@ public class StudyCardDocument {
 	private String title;
 	@Field("content")
 	private String content;
+	@Field("max_participants")
+	private Integer maxParticipants;
 	@Field("user_id")
 	private String userId;
 	@CreatedDate

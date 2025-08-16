@@ -10,6 +10,7 @@ public class StudyCardCreateDto {
     public record Request(
         @Schema(description = "스터디 카드의 제목") String title,
         @Schema(description = "스터디 카드의 설명") String content,
+        @Schema(description = "스터디 카드의 최대 참여 인원") Integer maxParticipants,
         @Schema(description = "스터디 카드의 종료 날짜 (YYYY-MM-DD 형식)") LocalDate dueDate,
         @Schema(description = "스터디 카드의 카테고리(CERTIFICATE, HOBBY)") StudyCategory category,
         @Schema(description = "스터디 카드 온라인 여부") boolean isOnline
@@ -18,6 +19,7 @@ public class StudyCardCreateDto {
     public record RequestWrapper(
         String title,
         String content,
+        Integer maxParticipants,
         LocalDate dueDate,
         StudyCategory category,
         boolean isOnline,
@@ -29,6 +31,7 @@ public class StudyCardCreateDto {
         return new RequestWrapper(
             request.title(),
             request.content(),
+            request.maxParticipants(),
             request.dueDate(),
             request.category(),
             request.isOnline(),
