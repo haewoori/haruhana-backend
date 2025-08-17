@@ -17,5 +17,23 @@ DELETE {{BaseUrl}}/api/v1/study/delete/{{StudyCardId}}
 Authorization: Bearer {{AccessToken}}
 
 ### Get Study Card List
-GET {{BaseUrl}}/api/v1/study/list?available=false&page=0&size=3
+GET {{BaseUrl}}/api/v1/study/list?available=true&page=0
 Authorization: Bearer {{AccessToken}}
+
+### Apply Study
+POST {{BaseUrl}}/api/v1/study/apply
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+  "studyCardId": "{{StudyCardId}}"
+}
+
+### Cancel Study Application
+POST {{BaseUrl}}/api/v1/study/cancel
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "studyCardId": "{{StudyCardId}}"
+}

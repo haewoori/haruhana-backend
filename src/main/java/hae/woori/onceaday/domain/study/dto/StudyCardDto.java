@@ -16,6 +16,7 @@ public class StudyCardDto {
 	private String title;
 	private String content;
 	private StudyUserProfileVo userProfile;
+	private int maxParticipants;
 	private LocalDateTime createdTime;
 	private LocalDateTime updatedTime;
 	private LocalDate dueDate;

@@ -1,6 +1,5 @@
 package hae.woori.onceaday.domain.study.service;
 
-import com.mongodb.client.result.UpdateResult;
 import hae.woori.onceaday.domain.SimpleService;
 import hae.woori.onceaday.domain.study.dto.StudyCardApplyDto;
 import hae.woori.onceaday.domain.study.external.StudyUserGateway;
@@ -8,11 +7,8 @@ import hae.woori.onceaday.exception.ClientSideException;
 import hae.woori.onceaday.persistence.document.StudyCardDocument;
 import hae.woori.onceaday.persistence.repository.StudyCardDocumentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,32 +16,37 @@ public class StudyCardApplyService implements SimpleService<StudyCardApplyDto.Re
 
     private final StudyCardDocumentRepository studyCardDocumentRepository;
     private final StudyUserGateway studyUserGateway;
-    private final MongoTemplate mongoTemplate;
 
     @Override
-    public StudyCardApplyDto.Response run(StudyCardApplyDto.RequestWrapper req) {
+    @Transactional
+    public StudyCardApplyDto.Response
+    run(StudyCardApplyDto.RequestWrapper request) {
         // 사용자 존재 체크
-        if (!studyUserGateway.checkUserExistsById(req.userId())) {
-            throw new ClientSideException("User does not exist: " + req.userId());
+        if (!studyUserGateway.checkUserExistsById(request.userId())) {
+            throw new ClientSideException("User does not exist: " + request.userId());
         }
 
         // 카드 존재/상태 체크
-        StudyCardDocument card = studyCardDocumentRepository.findById(req.studyCardId())
-                .orElseThrow(() -> new ClientSideException("Study card not found: " + req.studyCardId()));
+        StudyCardDocument studyCardDocument = studyCardDocumentRepository.findById(request.studyCardId())
+                .orElseThrow(() -> new ClientSideException("Study card not found: " + request.studyCardId()));
 
         // 참가자일 시 성공으로 간주 (idempotent)
-        if (card.hasParticipant(req.userId())) {
+        if (studyCardDocument.hasParticipant(request.userId())) {
             return new StudyCardApplyDto.Response(true, true);
         }
 
-        Query q = Query.query(Criteria.where("_id").is(req.studyCardId()));
-        Update u = new Update().addToSet("participant_ids", req.userId());
-        UpdateResult r = mongoTemplate.updateFirst(q, u, StudyCardDocument.class);
+        if(!studyCardDocument.isAvailable()) {
+            throw new ClientSideException("Study 모집인원이 모두 찼습니다: " + request.studyCardId());
+        }
 
-        boolean participated = r.getModifiedCount() > 0 || studyCardDocumentRepository
-                .findById(req.studyCardId()).map(c -> c.hasParticipant(req.userId())).orElse(false);
+        studyCardDocument.getParticipantIds().add(request.userId());
+        if(studyCardDocument.getParticipantIds().size() == studyCardDocument.getMaxParticipants()) {
+            studyCardDocument.updateAvailableStatus(false); // 인원이 다 찼으므로 공개 상태 변경
+        }
 
-        return new StudyCardApplyDto.Response(true, participated);
+        studyCardDocumentRepository.save(studyCardDocument);
+
+        return new StudyCardApplyDto.Response(true, true);
     }
 }
 
