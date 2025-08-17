@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class StudyCardApplyDto {
     @Schema(description = "신청 요청")
-    public record Request(String cardId) {}
+    public record Request(String studyCardId) {}
 
-    public record RequestWrapper(String cardId, String userId) {
+    public record RequestWrapper(String studyCardId, String userId) {
         public static RequestWrapper of(Request req, String userId) {
-            return new RequestWrapper(req.cardId(), userId);
+            return new RequestWrapper(req.studyCardId(), userId);
         }
     }
 
