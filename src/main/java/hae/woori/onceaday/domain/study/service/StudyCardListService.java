@@ -1,5 +1,6 @@
 package hae.woori.onceaday.domain.study.service;
 
+import hae.woori.onceaday.domain.study.mapper.ParticipantResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class StudyCardListService implements SimpleService<StudyCardListDto.Requ
 	private final StudyCardDocumentDao studyCardDocumentDao;
 	private final StudyUserGateway studyUserGateway;
 	private final StudyCardMapper studyCardMapper;
+	private final ParticipantResolver participantResolver;
 
 	@Override
 	public StudyCardListDto.Response run(StudyCardListDto.RequestWrapper request) {
@@ -29,7 +31,7 @@ public class StudyCardListService implements SimpleService<StudyCardListDto.Requ
 
 		Page<StudyCardDto> mappedResult = resultPage.map(document -> {
 				StudyUserProfileVo userProfile = studyUserGateway.getUserProfileById(document.getUserId());
-				return studyCardMapper.studyCardDocumentToStudyCardDto(document, request.userId(), userProfile);
+				return studyCardMapper.studyCardDocumentToStudyCardDto(document, request.userId(), userProfile, participantResolver);
 			}
 		);
 
