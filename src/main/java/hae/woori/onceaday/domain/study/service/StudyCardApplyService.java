@@ -30,20 +30,20 @@ public class StudyCardApplyService implements SimpleService<StudyCardApplyDto.Re
         }
 
         // 카드 존재/상태 체크
-        StudyCardDocument card = studyCardDocumentRepository.findById(req.cardId())
-                .orElseThrow(() -> new ClientSideException("Study card not found: " + req.cardId()));
+        StudyCardDocument card = studyCardDocumentRepository.findById(req.studyCardId())
+                .orElseThrow(() -> new ClientSideException("Study card not found: " + req.studyCardId()));
 
         // 참가자일 시 성공으로 간주 (idempotent)
         if (card.hasParticipant(req.userId())) {
             return new StudyCardApplyDto.Response(true, true);
         }
 
-        Query q = Query.query(Criteria.where("_id").is(req.cardId()));
+        Query q = Query.query(Criteria.where("_id").is(req.studyCardId()));
         Update u = new Update().addToSet("participant_ids", req.userId());
         UpdateResult r = mongoTemplate.updateFirst(q, u, StudyCardDocument.class);
 
         boolean participated = r.getModifiedCount() > 0 || studyCardDocumentRepository
-                .findById(req.cardId()).map(c -> c.hasParticipant(req.userId())).orElse(false);
+                .findById(req.studyCardId()).map(c -> c.hasParticipant(req.userId())).orElse(false);
 
         return new StudyCardApplyDto.Response(true, participated);
     }

@@ -58,17 +58,6 @@ public class StudyCardDocument {
 		this.isPublic = isPublic;
 	}
 
-	public boolean addParticipant(String userId) {
-		if (participantIds == null) participantIds = new ArrayList<>();
-		if (participantIds.contains(userId)) return false;
-		participantIds.add(userId);
-		return true;
-	}
-
-	public boolean removeParticipant(String userId) {
-		return participantIds != null && participantIds.remove(userId);
-	}
-
 	public boolean hasParticipant(String userId) {
 		return participantIds != null && participantIds.contains(userId);
 	}

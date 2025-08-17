@@ -5,8 +5,8 @@ public class StudyCardDeleteDto {
 	public record Request() {}
 	public record Response() {}
 
-	public static StudyCardDeleteDto.RequestWrapper toRequestWrapper(String cardId, String userId) {
-		return new StudyCardDeleteDto.RequestWrapper(cardId, userId);
+	public static StudyCardDeleteDto.RequestWrapper toRequestWrapper(String studyCardId, String userId) {
+		return new StudyCardDeleteDto.RequestWrapper(studyCardId, userId);
 	}
 
 	public record RequestWrapper(
