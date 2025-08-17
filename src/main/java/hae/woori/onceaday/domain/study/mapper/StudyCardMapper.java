@@ -23,7 +23,8 @@ public interface StudyCardMapper {
     @Mapping(target = "studyCardId", source = "studyCardDocument.id")
     @Mapping(target = "isMine",
             expression = "java(studyCardDocument.getUserId().equals(userId))")
-    StudyCardDto studyCardDocumentToStudyCardDto(StudyCardDocument studyCardDocument, @Context String userId, @Context
+    @Mapping(target = "userProfile", source = "userProfile")
+    StudyCardDto studyCardDocumentToStudyCardDto(StudyCardDocument studyCardDocument, @Context String userId,
         StudyUserProfileVo userProfile, @Context ParticipantResolver participantResolver);
 
     @AfterMapping
