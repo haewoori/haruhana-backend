@@ -75,7 +75,6 @@ public class StudyController {
         return studyCardDeleteService.run(StudyCardDeleteDto.toRequestWrapper(studyCardId, userId));
     }
 
-	//TODO: 4. 스터디 신청 기능
     @PostMapping("/apply")
     @Operation(description = "스터디에 신청(참가)합니다.")
     public StudyCardApplyDto.Response apply(
@@ -87,7 +86,6 @@ public class StudyController {
         return studyCardApplyService.run(StudyCardApplyDto.RequestWrapper.of(request, userId));
     }
 
-	//TODO: 5. 스터디 신청 취소 기능
     @PostMapping("/cancel")
     @Operation(description = "스터디 신청(참가)을 취소합니다.")
     public StudyCardCancelDto.Response cancel(
