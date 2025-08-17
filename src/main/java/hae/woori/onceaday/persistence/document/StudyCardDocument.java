@@ -13,6 +13,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @Builder
@@ -26,6 +27,8 @@ public class StudyCardDocument {
 	private String title;
 	@Field("content")
 	private String content;
+	@Field("max_participants")
+	private Integer maxParticipants;
 	@Field("user_id")
 	private String userId;
 	@CreatedDate
@@ -49,7 +52,27 @@ public class StudyCardDocument {
 	@Field("is_available")
 	private boolean isAvailable;
 
+	@Builder.Default
+	@Field("participant_ids")
+	private List<String> participantIds = new ArrayList<>();
+
 	public void updatePublicStatus(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
+
+	public boolean addParticipant(String userId) {
+		if (participantIds == null) participantIds = new ArrayList<>();
+		if (participantIds.contains(userId)) return false;
+		participantIds.add(userId);
+		return true;
+	}
+
+	public boolean removeParticipant(String userId) {
+		return participantIds != null && participantIds.remove(userId);
+	}
+
+	public boolean hasParticipant(String userId) {
+		return participantIds != null && participantIds.contains(userId);
+	}
+
 }
