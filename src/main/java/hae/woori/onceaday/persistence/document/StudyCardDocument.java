@@ -49,6 +49,7 @@ public class StudyCardDocument {
 	//true면 모집중/모집완료. false면 삭제 등으로 비공개
 	@Field("is_public")
 	private boolean isPublic;
+	//신청가능이면 true, 모집완료면 false
 	@Field("is_available")
 	private boolean isAvailable;
 
@@ -58,6 +59,10 @@ public class StudyCardDocument {
 
 	public void updatePublicStatus(boolean isPublic) {
 		this.isPublic = isPublic;
+	}
+
+	public void updateAvailableStatus(boolean isAvailable) {
+		this.isAvailable = isAvailable;
 	}
 
 	public boolean hasParticipant(String userId) {
