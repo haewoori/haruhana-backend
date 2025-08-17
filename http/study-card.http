@@ -4,10 +4,11 @@ Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
-  "title": "This is Title",
+  "title": "This is Study 10",
   "dueDate": "2025-08-20",
   "content": "Detailed content of the study card",
-  "category": "CERTIFICATE",
+  "maxParticipants": 10,
+  "category": "HOBBY",
   "isOnline": true
 }
 

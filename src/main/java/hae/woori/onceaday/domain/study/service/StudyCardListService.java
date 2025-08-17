@@ -3,6 +3,7 @@ package hae.woori.onceaday.domain.study.service;
 import hae.woori.onceaday.domain.study.mapper.ParticipantResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hae.woori.onceaday.domain.SimpleService;
 import hae.woori.onceaday.domain.study.dto.StudyCardDto;
@@ -26,6 +27,7 @@ public class StudyCardListService implements SimpleService<StudyCardListDto.Requ
 	private final ParticipantResolver participantResolver;
 
 	@Override
+	@Transactional(readOnly = true)
 	public StudyCardListDto.Response run(StudyCardListDto.RequestWrapper request) {
 		Page<StudyCardDocument> resultPage = studyCardDocumentDao.findAllCards(request.pageable(), request.isAvailable());
 

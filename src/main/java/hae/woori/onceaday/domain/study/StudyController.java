@@ -68,11 +68,11 @@ public class StudyController {
         return studyCardListService.run(StudyCardListDto.requestWrapperFrom(isAvailable, pageable, userId));
     }
 
-    @DeleteMapping("/delete/{cardId}")
-    public StudyCardDeleteDto.Response delete(@PathVariable String cardId, Authentication authentication) {
+    @DeleteMapping("/delete/{studyCardId}")
+    public StudyCardDeleteDto.Response delete(@PathVariable String studyCardId, Authentication authentication) {
         String userId = (String) authentication.getPrincipal();
-        log.info("User ID {} deleting study card with ID: {}", userId, cardId);
-        return studyCardDeleteService.run(StudyCardDeleteDto.toRequestWrapper(cardId, userId));
+        log.info("User ID {} deleting study card with ID: {}", userId, studyCardId);
+        return studyCardDeleteService.run(StudyCardDeleteDto.toRequestWrapper(studyCardId, userId));
     }
 
 	//TODO: 4. 스터디 신청 기능
@@ -83,7 +83,7 @@ public class StudyController {
             Authentication authentication
     ) {
         String userId = (String) authentication.getPrincipal();
-        log.info("User {} apply card {}", userId, request.cardId());
+        log.info("User {} apply card {}", userId, request.studyCardId());
         return studyCardApplyService.run(StudyCardApplyDto.RequestWrapper.of(request, userId));
     }
 
@@ -95,7 +95,7 @@ public class StudyController {
             Authentication authentication
     ) {
         String userId = (String) authentication.getPrincipal();
-        log.info("User {} cancel card {}", userId, request.cardId());
+        log.info("User {} cancel card {}", userId, request.studyCardId());
         return studyCardCancelService.run(StudyCardCancelDto.RequestWrapper.of(request, userId));
     }
 

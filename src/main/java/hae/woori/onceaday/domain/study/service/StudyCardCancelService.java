@@ -21,25 +21,25 @@ public class StudyCardCancelService implements SimpleService<StudyCardCancelDto.
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public StudyCardCancelDto.Response run(StudyCardCancelDto.RequestWrapper req) {
-        if (!studyUserGateway.checkUserExistsById(req.userId())) {
-            throw new ClientSideException("User does not exist: " + req.userId());
+    public StudyCardCancelDto.Response run(StudyCardCancelDto.RequestWrapper request) {
+        if (!studyUserGateway.checkUserExistsById(request.userId())) {
+            throw new ClientSideException("User does not exist: " + request.userId());
         }
 
-        StudyCardDocument card = studyCardDocumentRepository.findById(req.cardId())
-                .orElseThrow(() -> new ClientSideException("Study card not found: " + req.cardId()));
+        StudyCardDocument card = studyCardDocumentRepository.findById(request.studyCardId())
+                .orElseThrow(() -> new ClientSideException("Study card not found: " + request.studyCardId()));
 
         // 미참가자일 시 성공으로 간주
-        if (!card.hasParticipant(req.userId())) {
+        if (!card.hasParticipant(request.userId())) {
             return new StudyCardCancelDto.Response(true, false);
         }
 
-        Query q = Query.query(Criteria.where("_id").is(req.cardId()));
-        Update u = new Update().pull("participant_ids", req.userId());
+        Query q = Query.query(Criteria.where("_id").is(request.studyCardId()));
+        Update u = new Update().pull("participant_ids", request.userId());
         UpdateResult r = mongoTemplate.updateFirst(q, u, StudyCardDocument.class);
 
         boolean stillParticipated = studyCardDocumentRepository
-                .findById(req.cardId()).map(c -> c.hasParticipant(req.userId())).orElse(false);
+                .findById(request.studyCardId()).map(c -> c.hasParticipant(request.userId())).orElse(false);
 
         return new StudyCardCancelDto.Response(r.getModifiedCount() >= 0, stillParticipated);
     }
